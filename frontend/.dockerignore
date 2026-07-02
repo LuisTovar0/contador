@@ -1,0 +1,12 @@
+node_modules
+.svelte-kit
+build
+.git
+.gitignore
+.env
+.env.local
+.impeccable
+.vscode
+.idea
+Dockerfile
+fly.toml

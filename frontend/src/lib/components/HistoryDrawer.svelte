@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { counterStore } from '$lib/store';
+	import { counterStore } from '$lib/store.svelte';
 	import { X, Search, RefreshCw, PlusCircle, ArrowUpRight, ArrowDownRight, Edit3, Trash2, Calendar } from 'lucide-svelte';
 
 	interface Props {

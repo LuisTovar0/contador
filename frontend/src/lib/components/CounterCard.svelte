@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { counterStore, type Counter } from '$lib/store';
+	import { counterStore, type Counter } from '$lib/store.svelte';
 	import Modal from './Modal.svelte';
 	import { Edit3, Trash2, HelpCircle, History, Clock, Keyboard, Percent, ChevronDown, ChevronUp, Plus, Minus, X } from 'lucide-svelte';
 

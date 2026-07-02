@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authStore, counterStore } from '$lib/store';
+	import { authStore, counterStore } from '$lib/store.svelte';
 	import AuthCard from '$lib/components/AuthCard.svelte';
 	import CounterCard from '$lib/components/CounterCard.svelte';
 	import CreateCounterModal from '$lib/components/CreateCounterModal.svelte';

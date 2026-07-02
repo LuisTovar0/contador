@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Modal from './Modal.svelte';
-	import { counterStore } from '$lib/store';
+	import { counterStore } from '$lib/store.svelte';
 	import { X, Plus, Trash2, Hash, Sparkles } from 'lucide-svelte';
 
 	interface Props {

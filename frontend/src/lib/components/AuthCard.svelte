@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authStore } from '$lib/store';
+	import { authStore } from '$lib/store.svelte';
 	import { isFirebaseConfigured } from '$lib/firebase';
 	import { Mail, Lock, LogIn, UserPlus, Play, Key, AlertCircle } from 'lucide-svelte';
 

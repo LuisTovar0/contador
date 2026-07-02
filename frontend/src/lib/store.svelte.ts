@@ -66,22 +66,26 @@ class AuthStore {
 	error = $state<string | null>(null);
 
 	constructor() {
-		if (isFirebaseConfigured && auth) {
-			onAuthStateChanged(auth, (firebaseUser) => {
-				if (firebaseUser) {
-					this.user = {
-						uid: firebaseUser.uid,
-						email: firebaseUser.email,
-						isAnonymous: firebaseUser.isAnonymous
-					};
-				} else {
-					this.user = null;
-				}
-				this.loading = false;
-			});
+		if (typeof window !== 'undefined') {
+			if (isFirebaseConfigured && auth) {
+				onAuthStateChanged(auth, (firebaseUser) => {
+					if (firebaseUser) {
+						this.user = {
+							uid: firebaseUser.uid,
+							email: firebaseUser.email,
+							isAnonymous: firebaseUser.isAnonymous
+						};
+					} else {
+						this.user = null;
+					}
+					this.loading = false;
+				});
+			} else {
+				// Local Storage fallback mode
+				this.loadLocalSession();
+			}
 		} else {
-			// Local Storage fallback mode
-			this.loadLocalSession();
+			this.loading = false;
 		}
 	}
 
@@ -228,46 +232,52 @@ class CounterStore {
 	canRedo = $derived(this.redoStack.length > 0);
 
 	constructor() {
-		// Watch auth changes to fetch counters & history
-		$effect(() => {
-			const currentUser = authStore.user;
-			this.cleanup();
+		if (typeof window !== 'undefined') {
+			// Watch auth changes to fetch counters & history
+			$effect.root(() => {
+				$effect(() => {
+					const currentUser = authStore.user;
+					this.cleanup();
 
-			if (currentUser) {
-				this.loading = true;
-				if (isFirebaseConfigured && db) {
-					// Setup Firebase listeners
-					const countersRef = collection(db, 'users', currentUser.uid, 'counters');
-					const qCounters = query(countersRef, orderBy('createdAt', 'desc'));
-					this.unsubscribeCounters = onSnapshot(qCounters, (snapshot) => {
-						this.counters = snapshot.docs.map((doc) => ({
-							id: doc.id,
-							...doc.data()
-						})) as Counter[];
+					if (currentUser) {
+						this.loading = true;
+						if (isFirebaseConfigured && db) {
+							// Setup Firebase listeners
+							const countersRef = collection(db, 'users', currentUser.uid, 'counters');
+							const qCounters = query(countersRef, orderBy('createdAt', 'desc'));
+							this.unsubscribeCounters = onSnapshot(qCounters, (snapshot) => {
+								this.counters = snapshot.docs.map((doc) => ({
+									id: doc.id,
+									...doc.data()
+								})) as Counter[];
+								this.loading = false;
+							});
+
+							const historyRef = collection(db, 'users', currentUser.uid, 'history');
+							const qHistory = query(historyRef, orderBy('timestamp', 'desc'), limit(50));
+							this.unsubscribeHistory = onSnapshot(qHistory, (snapshot) => {
+								this.history = snapshot.docs.map((doc) => ({
+									id: doc.id,
+									...doc.data()
+								})) as HistoryEntry[];
+							});
+						} else {
+							// Local storage synchronization
+							this.loadLocalData(currentUser.uid);
+							this.loading = false;
+						}
+					} else {
+						this.counters = [];
+						this.history = [];
+						this.undoStack = [];
+						this.redoStack = [];
 						this.loading = false;
-					});
-
-					const historyRef = collection(db, 'users', currentUser.uid, 'history');
-					const qHistory = query(historyRef, orderBy('timestamp', 'desc'), limit(50));
-					this.unsubscribeHistory = onSnapshot(qHistory, (snapshot) => {
-						this.history = snapshot.docs.map((doc) => ({
-							id: doc.id,
-							...doc.data()
-						})) as HistoryEntry[];
-					});
-				} else {
-					// Local storage synchronization
-					this.loadLocalData(currentUser.uid);
-					this.loading = false;
-				}
-			} else {
-				this.counters = [];
-				this.history = [];
-				this.undoStack = [];
-				this.redoStack = [];
-				this.loading = false;
-			}
-		});
+					}
+				});
+			});
+		} else {
+			this.loading = false;
+		}
 	}
 
 	private cleanup() {

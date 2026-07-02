@@ -18,7 +18,8 @@ import {
 	orderBy,
 	limit,
 	updateDoc,
-	writeBatch
+	writeBatch,
+	getDoc
 } from 'firebase/firestore';
 
 export interface Counter {
@@ -139,7 +140,13 @@ class AuthStore {
 		this.error = null;
 		this.loading = true;
 		try {
-			if (isFirebaseConfigured && auth) {
+			if (isFirebaseConfigured && auth && db) {
+				// Server-side whitelist verification (client check)
+				const docRef = doc(db, 'whitelist', email.trim().toLowerCase());
+				const docSnap = await getDoc(docRef);
+				if (!docSnap.exists()) {
+					throw new Error('This email is not authorized to register. Please contact the administrator.');
+				}
 				await createUserWithEmailAndPassword(auth, email, password);
 			} else {
 				// Local storage mock signup

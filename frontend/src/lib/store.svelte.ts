@@ -28,6 +28,15 @@ export interface HistoryEntry {
   method?: string;
 }
 
+export function formatUnit(unit: string): string {
+  if (!unit) return '';
+  const trimmedEnd = unit.trimEnd();
+  if (/^\s/.test(trimmedEnd)) {
+    return ' ' + trimmedEnd.trimStart();
+  }
+  return trimmedEnd;
+}
+
 export interface UserSession {
   uid: string;
   username: string | null;
@@ -343,7 +352,7 @@ class CounterStore {
       name,
       value: 0,
       decimals,
-      unit: unit.trim(),
+      unit: formatUnit(unit),
       increments,
       createdAt: now,
       updatedAt: now,
@@ -461,7 +470,7 @@ class CounterStore {
       ...counter,
       name,
       decimals,
-      unit: unit.trim(),
+      unit: formatUnit(unit),
       increments,
       updatedAt: now,
     };

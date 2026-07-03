@@ -3,7 +3,9 @@
   import {
     Clock, EllipsisVertical, Redo2, Settings, Trash2, Undo2, Keyboard, PenLine
   } from 'lucide-svelte';
-  import { dialog } from '$lib/dialog.svelte';
+  import { dialog } from '$lib/components/modals/dialog.svelte.js';
+  import { t } from '$lib';
+
   import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import SetExactValueModal from '$lib/components/modals/SetExactValueModal.svelte';
@@ -39,8 +41,8 @@
     triggerValuePop();
     const finalVal = counter.value + inc;
     const desc = inc >= 0
-        ? `Quick incremented by +${ inc } ${ counter.unit }`.trim()
-        : `Quick decremented by ${ inc } ${ counter.unit }`.trim();
+        ? t('log.quickInc', { val: inc, unit: counter.unit })
+        : t('log.quickDec', { val: Math.abs(inc), unit: counter.unit });
     await counterStore.updateCounterValue(counter.id, finalVal, desc, false, 'Quick Adjust');
   }
 
@@ -91,7 +93,7 @@
 
         <!-- Current Value -->
         <div class="flex items-center gap-2 select-none justify-end w-auto">
-            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold">Value:</span>
+            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-550 md:hidden uppercase tracking-wider font-bold">{t('counters.valueLabel')}</span>
             <span
                     class="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-550 tabular-nums transition-all duration-100
 				{valPopAnimation ? 'scale-110 text-primary-600 dark:text-primary-400' : 'scale-100'}"
@@ -102,7 +104,7 @@
 
         <!-- Quick Adjustments -->
         <div class="flex items-center gap-1.5 w-auto flex-wrap">
-            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold mr-1">Adjust:</span>
+            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-550 md:hidden uppercase tracking-wider font-bold mr-1">{t('counters.adjust')}</span>
             {#each counter.increments as inc}
                 <div class="flex items-center gap-1 shrink-0">
                     <button
@@ -129,7 +131,7 @@
         <div class="flex items-center gap-1.5 justify-end w-auto shrink-0">
             <!-- Undo -->
             <IconButton
-                    tooltip="Undo last action"
+                    tooltip={t('counters.undoTooltip')}
                     onclick={() => counterStore.undoCounter(counter.id)}
                     disabled={!counterStore.canUndoCounter(counter.id)}
                     variant="outline"
@@ -141,7 +143,7 @@
 
             <!-- Redo -->
             <IconButton
-                    tooltip="Redo last action"
+                    tooltip={t('counters.redoTooltip')}
                     onclick={() => counterStore.redoCounter(counter.id)}
                     disabled={!counterStore.canRedoCounter(counter.id)}
                     variant="outline"
@@ -155,7 +157,7 @@
             <div class="relative" bind:this={menuContainer}>
                 <IconButton
                         onclick={() => (showActionMenu = !showActionMenu)}
-                        tooltip="More Actions"
+                        tooltip={t('counters.moreActions')}
                         variant="outline"
                         size="sm"
                         shape="square"
@@ -177,7 +179,7 @@
                                 class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <PenLine size={13} class="text-zinc-400 dark:text-zinc-500" />
-                            <span>Custom Adjust</span>
+                            <span>{t('counters.customAdjust')}</span>
                         </button>
 
                         <!-- Set Value -->
@@ -187,10 +189,10 @@
 								openSetExactValue();
 								showActionMenu = false;
 							}}
-                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
+                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-355 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Keyboard size={13} class="text-zinc-400 dark:text-zinc-555" />
-                            <span>Set Exact Value</span>
+                            <span>{t('counters.setExactValue')}</span>
                         </button>
 
                         <!-- Toggle History -->
@@ -200,10 +202,10 @@
 								openHistory();
 								showActionMenu = false;
 							}}
-                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-955 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
+                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-355 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-955 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Clock size={13} class="text-zinc-400 dark:text-zinc-500" />
-                            <span>View Activity Log</span>
+                            <span>{t('counters.viewActivityLog')}</span>
                         </button>
 
                         <!-- Settings -->
@@ -216,7 +218,7 @@
                                 class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-355 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-955 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Settings size={13} class="text-zinc-400 dark:text-zinc-500" />
-                            <span>Settings</span>
+                            <span>{t('counters.settingsTooltip')}</span>
                         </button>
 
                         <div class="h-px bg-zinc-100 dark:bg-zinc-800/80 my-1"></div>
@@ -228,10 +230,10 @@
 								openDeleteConfirm();
 								showActionMenu = false;
 							}}
-                                class="w-full text-left px-3.5 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all flex items-center gap-2 cursor-pointer"
+                                class="w-full text-left px-3.5 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-955/20 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Trash2 size={13} />
-                            <span>Delete Counter</span>
+                            <span>{t('counters.deleteCounter')}</span>
                         </button>
                     </div>
                 {/if}

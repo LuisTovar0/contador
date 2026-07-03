@@ -2,6 +2,8 @@
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Minus, PenLine, Plus, X } from 'lucide-svelte';
   import Modal from './Modal.svelte';
+  import { t } from '$lib';
+
 
   interface Props {
     show?: boolean;
@@ -29,8 +31,8 @@
     const delta = isCustomPositive ? parsed : -parsed;
     const finalVal = counter.value + delta;
     const desc = delta >= 0
-      ? `Adjusted custom by +${parsed} ${counter.unit}`.trim()
-      : `Adjusted custom by -${parsed} ${counter.unit}`.trim();
+      ? t('log.customInc', { val: parsed, unit: counter.unit })
+      : t('log.customDec', { val: parsed, unit: counter.unit });
 
     if (onapplied) {
       onapplied();
@@ -44,7 +46,7 @@
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
         <h2 class="text-lg font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <PenLine size={18} />
-            <span>Custom Adjustment</span>
+            <span>{t('custom.title')}</span>
         </h2>
         <button
                 onclick={() => onclose(false)}
@@ -56,7 +58,7 @@
 
     <div class="flex-1 overflow-y-auto space-y-4 pr-1 pb-2">
         <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
-            Choose how much to adjust the counter <strong class="text-zinc-800 dark:text-zinc-300">"{counter.name}"</strong> by.
+            {@html t('custom.body', { name: `<strong class="text-zinc-800 dark:text-zinc-300">"${counter.name}"</strong>` })}
         </p>
 
         <!-- Direction selection -->
@@ -70,7 +72,7 @@
 					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
             >
                 <Plus size={14} />
-                <span>Increment (+)</span>
+                <span>{t('custom.increment')}</span>
             </button>
             <button
                     type="button"
@@ -81,14 +83,14 @@
 					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
             >
                 <Minus size={14} />
-                <span>Decrement (-)</span>
+                <span>{t('custom.decrement')}</span>
             </button>
         </div>
 
         <div>
             <label for="customAmount-{counter.id}"
-                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >Adjustment Amount ({counter.unit || 'no unit'})</label
+                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+            >{t('custom.amountLabel', { unit: counter.unit || 'no unit' })}</label
             >
             <input
                     type="number"
@@ -105,9 +107,9 @@
         <button
                 type="button"
                 onclick={() => onclose(false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
+                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-650 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
         >
-            Cancel
+            {t('modals.cancel')}
         </button>
         <button
                 type="button"
@@ -115,7 +117,7 @@
                 class="px-5 py-2.5 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer
 			{isCustomPositive ? 'bg-primary-600 hover:bg-primary-500 shadow-primary-glow' : 'bg-secondary-600 hover:bg-secondary-500 shadow-secondary-glow'}"
         >
-            Apply {isCustomPositive ? 'Addition' : 'Subtraction'}
+            {isCustomPositive ? t('custom.applyAddition') : t('custom.applySubtraction')}
         </button>
     </div>
 </Modal>

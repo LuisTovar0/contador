@@ -3,6 +3,8 @@
   import { Hash, Plus, Trash2, X } from 'lucide-svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
+  import { t } from '$lib';
+
 
   interface Props {
     show?: boolean;
@@ -43,14 +45,14 @@
     errorMessage = null;
 
     if (!name.trim()) {
-      errorMessage = 'Counter name is required.';
+      errorMessage = t('settings.error.nameRequired');
       return;
     }
 
     const finalIncrements = increments.map(v => (v !== null && typeof v === 'number' && !isNaN(v)) ? v : 1);
 
     if (finalIncrements.length < 1 || finalIncrements.length > 3) {
-      errorMessage = 'You must have between 1 and 3 default increments.';
+      errorMessage = t('settings.error.incrementsCount');
       return;
     }
 
@@ -63,7 +65,7 @@
       );
       onclose();
     } catch (err: any) {
-      errorMessage = err.message || 'Failed to create counter.';
+      errorMessage = err.message || t('create.error.failedCreate');
     }
   }
 </script>
@@ -71,14 +73,14 @@
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
         <h2 class="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-150">
-            <span>New Counter</span>
+            <span>{t('create.title')}</span>
         </h2>
         <IconButton
                 onclick={onclose}
                 variant="ghost"
                 size="md"
                 shape="square"
-                aria-label="Close"
+                aria-label={t('modals.close')}
         >
             <X size={20} />
         </IconButton>
@@ -94,38 +96,38 @@
         <!-- Counter Name -->
         <div>
             <label for="counterName"
-                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >Counter Name *</label
+                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+            >{t('settings.nameLabel')}</label
             >
             <input
                     type="text"
                     id="counterName"
                     bind:value={name}
-                    placeholder="e.g. Water Intake, Daily Steps"
+                    placeholder={t('settings.namePlaceholder')}
                     required
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
         <!-- Unit -->
         <div>
             <label for="counterUnit"
-                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >Unit (free text)</label
+                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+            >{t('settings.unitLabel')}</label
             >
             <input
                     type="text"
                     id="counterUnit"
                     bind:value={unit}
-                    placeholder="e.g. Liters, reps, cups, km"
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    placeholder={t('settings.unitPlaceholder')}
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
         <!-- Decimals selection -->
         <div>
-			<span class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >Decimal Precision</span>
+			<span class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+            >{t('settings.decimalPrecision')}</span>
             <div class="grid grid-cols-4 gap-2">
                 {#each [ 0, 1, 2, 3 ] as d}
                     <button
@@ -136,7 +138,7 @@
 							? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
 							: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-450 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
                     >
-                        {d === 0 ? 'Int' : `.${ '0'.repeat(d) }`}
+                        {decimals === 0 ? t('settings.integer') : `.${ '0'.repeat(d) }`}
                     </button>
                 {/each}
             </div>
@@ -145,8 +147,8 @@
         <!-- Default increments -->
         <div>
             <div class="flex items-center justify-between mb-1.5">
-				<span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
-                >Default Increments</span>
+				<span class="text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider"
+                >{t('settings.defaultIncrements')}</span>
                 <span class="text-xs text-zinc-400 dark:text-zinc-500">({increments.length}/3 buttons)</span>
             </div>
 
@@ -170,7 +172,7 @@
                         </div>
                         {#if increments.length > 1}
                             <IconButton
-                                    tooltip="Remove increment"
+                                    tooltip={t('modals.remove')}
                                     type="button"
                                     onclick={() => removeIncrement(index)}
                                     variant="danger-outline"
@@ -190,7 +192,7 @@
                             class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200/60 dark:border-primary-500/20 hover:border-primary-300 dark:hover:border-primary-500/40 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-all bg-zinc-50/50 dark:bg-primary-950/10 cursor-pointer text-xs"
                     >
                         <Plus size={14} />
-                        <span>Add Increment Button</span>
+                        <span>{t('settings.addIncrement')}</span>
                     </button>
                 {/if}
             </div>
@@ -200,15 +202,15 @@
             <button
                     type="button"
                     onclick={onclose}
-                    class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
+                    class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-650 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
             >
-                Cancel
+                {t('modals.cancel')}
             </button>
             <button
                     type="submit"
                     class="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold transition-all text-xs cursor-pointer shadow-primary-glow hover:shadow-primary-glow active:translate-y-[0.5px]"
             >
-                Create Counter
+                {t('create.createCounter')}
             </button>
         </div>
     </form>

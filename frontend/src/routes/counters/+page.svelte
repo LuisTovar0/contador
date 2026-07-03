@@ -8,10 +8,12 @@
   import { tooltip } from '$lib/components/ui/tooltip/tooltip.svelte.js';
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, counterStore, themeStore } from '$lib/store.svelte';
-  import { dialog } from '$lib/dialog.svelte';
+  import { dialog } from '$lib/components/modals/dialog.svelte.js';
+  import { i18n, t } from '$lib';
   import {
     CheckCircle2, History, LayoutGrid, List, LogOut, Moon, Plus, RotateCcw, Search, Sun,
   } from 'lucide-svelte';
+
 
   // Search state
   let searchQuery = $state('');
@@ -92,7 +94,7 @@
 </script>
 
 <svelte:head>
-    <title>Contadores</title>
+    <title>{t('counters.title')}</title>
 </svelte:head>
 
 <!-- MAIN APPLICATION WORKFLOW -->
@@ -113,9 +115,21 @@
         </div>
 
         <div class="flex items-center gap-1.5">
+            <!-- Language Switcher Button -->
+            <IconButton
+                    tooltip={{ text: t('language.select'), position: 'bottom' }}
+                    onclick={() => i18n.setLocale(i18n.locale === 'pt-PT' ? 'en-GB' : 'pt-PT')}
+                    variant="outline"
+                    size="lg"
+                    shape="square"
+                    class="text-[10px] font-bold"
+            >
+                <span>{i18n.locale.split('-')[0].toUpperCase()}</span>
+            </IconButton>
+
             <!-- Theme Switcher Button -->
             <IconButton
-                    tooltip={{ text: themeStore.current === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode', position: 'bottom' }}
+                    tooltip={{ text: themeStore.current === 'dark' ? t('theme.lightTooltip') : t('theme.darkTooltip'), position: 'bottom' }}
                     onclick={() => themeStore.toggle()}
                     variant="outline"
                     size="lg"
@@ -131,7 +145,7 @@
 
             <!-- Global History Modal Button -->
             <IconButton
-                    tooltip={{ text: 'Activity logs', position: 'bottom' }}
+                    tooltip={{ text: t('counters.activityLogs'), position: 'bottom' }}
                     onclick={openHistoryModal}
                     variant="outline"
                     size="lg"
@@ -142,7 +156,7 @@
 
             <!-- Logout Button -->
             <IconButton
-                    tooltip={{ text: 'Sign Out', position: 'bottom' }}
+                    tooltip={{ text: t('counters.signOut'), position: 'bottom' }}
                     onclick={handleLogout}
                     variant="danger-outline"
                     size="lg"
@@ -164,7 +178,7 @@
                 <input
                         type="text"
                         bind:value={searchQuery}
-                        placeholder="Search counters..."
+                        placeholder={t('counters.searchPlaceholder')}
                         class="w-full bg-white/25 dark:bg-black/35 backdrop-blur-xl border border-zinc-200/55 dark:border-primary-500/20 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-all focus:ring-1 focus:ring-primary-500/40 text-xs shadow-sm"
                 />
             </div>
@@ -182,7 +196,7 @@
 						{viewMode === 'grid'
 							? 'bg-white dark:bg-zinc-900 text-primary-600 dark:text-primary-400 shadow-sm border border-zinc-200/65 dark:border-primary-500/30'
 							: 'text-zinc-450 hover:text-zinc-750 dark:hover:text-zinc-300'}"
-                            use:tooltip={"Grid view"}
+                            use:tooltip={t('counters.gridView')}
                     >
                         <LayoutGrid size={14} />
                     </button>
@@ -195,7 +209,7 @@
 						{viewMode === 'list'
 							? 'bg-white dark:bg-zinc-900 text-primary-600 dark:text-primary-400 shadow-sm border border-zinc-200/65 dark:border-primary-500/30'
 							: 'text-zinc-450 hover:text-zinc-755 dark:hover:text-zinc-300'}"
-                            use:tooltip={"List view"}
+                            use:tooltip={t('counters.listView')}
                     >
                         <List size={14} />
                     </button>
@@ -224,11 +238,11 @@
                     <!-- Specular reflection glass highlight -->
                     <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
                     <!-- List Header (Desktop-only header row) -->
-                    <div class="hidden md:grid md:grid-cols-[2.5fr_1fr_1.8fr_1.5fr] items-center gap-4 py-2.5 px-4 bg-zinc-50/50 dark:bg-zinc-950/20 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-                        <span>Counter Name</span>
-                        <span class="md:text-right pr-2">Value</span>
-                        <span>Quick Increments</span>
-                        <span class="md:text-right pr-2">Actions & Controls</span>
+                    <div class="hidden md:grid md:grid-cols-[2.5fr_1fr_1.8fr_1.5fr] items-center gap-4 py-2.5 px-4 bg-zinc-50/50 dark:bg-zinc-950/20 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-wider">
+                        <span>{t('counters.counterName')}</span>
+                        <span class="md:text-right pr-2">{t('counters.value')}</span>
+                        <span>{t('counters.quickIncrements')}</span>
+                        <span class="md:text-right pr-2">{t('counters.actionsControls')}</span>
                     </div>
 
                     <div class="divide-y divide-zinc-100 dark:divide-zinc-850">
@@ -257,7 +271,7 @@
             size="xl"
             shape="circle"
             class="shadow-md hover:scale-105"
-            aria-label="Create new counter"
+            aria-label={t('counters.createCounter')}
     >
         <Plus size={24} />
     </IconButton>
@@ -277,7 +291,7 @@
                 class="text-primary-600 dark:text-primary-400 hover:underline font-bold flex items-center gap-1 cursor-pointer shrink-0 uppercase tracking-wider text-[10px]"
         >
             <RotateCcw size={10} />
-            <span>Undo</span>
+            <span>{t('counters.undo')}</span>
         </button>
     </div>
 {/if}

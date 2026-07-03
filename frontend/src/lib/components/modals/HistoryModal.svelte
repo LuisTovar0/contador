@@ -3,6 +3,8 @@
   import { ArrowDownRight, ArrowUpRight, Calendar, Clock, Edit3, PlusCircle, Search, Trash2, X } from 'lucide-svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
+  import { t } from '$lib';
+
 
   interface Props {
     show?: boolean;
@@ -66,6 +68,18 @@
     const date = new Date(timestamp);
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
+
+  const translatedMethod = (method: string) => {
+    if (method === 'Creation') return t('history.method.creation');
+    if (method === 'Settings Update') return t('history.method.settingsUpdate');
+    if (method === 'Deletion') return t('history.method.deletion');
+    if (method === 'Quick Adjust') return t('history.method.quickAdjust');
+    if (method === 'Custom Adjust') return t('history.method.customAdjust');
+    if (method === 'Direct Set') return t('history.method.directSet');
+    if (method === 'Undo') return t('history.method.undo');
+    if (method === 'Redo') return t('history.method.redo');
+    return method;
+  };
 </script>
 
 <Modal {show} {onclose}>
@@ -74,10 +88,10 @@
         <div>
             <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                 <Clock size={18} class="text-primary-600 dark:text-primary-400" />
-                <span>{counterId ? `${ counterName() } Activity` : 'Activity History'}</span>
+                <span>{counterId ? t('history.titleCounter', { name: counterName() }) : t('history.title')}</span>
             </h2>
             <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                {counterId ? 'Log of events for this counter' : 'Log of value adjustments and events'}
+                {counterId ? t('history.subtitleCounter') : t('history.subtitle')}
             </p>
         </div>
         <IconButton
@@ -100,8 +114,8 @@
             <input
                     type="text"
                     bind:value={searchQuery}
-                    placeholder={counterId ? "Search changes..." : "Search by counter name..."}
-                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    placeholder={counterId ? t('history.searchPlaceholderCounter') : t('history.searchPlaceholder')}
+                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
     </div>
@@ -109,11 +123,11 @@
     <!-- History Items -->
     <div class="flex-1 overflow-y-auto pt-4 space-y-4 pr-1">
         {#if visibleHistory().length === 0}
-            <div class="flex flex-col items-center justify-center h-48 text-center text-zinc-400 dark:text-zinc-500">
+            <div class="flex flex-col items-center justify-center h-48 text-center text-zinc-405 dark:text-zinc-500">
                 <Calendar size={32} class="text-zinc-300 dark:text-zinc-600 mb-2" />
-                <p class="text-sm">No activity history recorded.</p>
+                <p class="text-sm">{t('history.noHistory')}</p>
                 {#if searchQuery}
-                    <p class="text-xs text-zinc-500 dark:text-zinc-600 mt-1">Try clearing your search query.</p>
+                    <p class="text-xs text-zinc-500 dark:text-zinc-650 mt-1">{t('history.clearSearch')}</p>
                 {/if}
             </div>
         {:else}
@@ -146,7 +160,7 @@
                                     {/if}
                                     {#if entry.method}
                                         <span class="text-[9px] bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/20 dark:border-primary-500/30 text-primary-700 dark:text-primary-400 font-semibold px-1.5 py-0.5 rounded-full select-none">
-                                            {entry.method}
+                                            {translatedMethod(entry.method)}
                                         </span>
                                     {/if}
                                 </div>
@@ -184,7 +198,7 @@
                             onclick={loadMore}
                             class="px-5 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl font-bold transition-all text-xs cursor-pointer active:scale-[0.98] shadow-sm"
                     >
-                        Load More
+                        {t('history.loadMore')}
                     </button>
                 </div>
             {/if}

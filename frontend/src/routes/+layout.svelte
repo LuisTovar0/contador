@@ -5,6 +5,8 @@
   import DialogHost from '$lib/components/modals/DialogHost.svelte';
   import { authStore } from '$lib/store.svelte';
   import { Loader2 } from 'lucide-svelte';
+  import { t } from '$lib';
+
 
   let { children } = $props();
 
@@ -41,7 +43,7 @@
                 <Loader2 class="absolute animate-pulse text-zinc-650 dark:text-zinc-405" size={20} />
             </div>
             <p class="text-xs font-semibold text-zinc-400 dark:text-zinc-550 uppercase tracking-widest animate-pulse">
-                Initializing Interface...</p>
+                {t('counters.initializing')}</p>
         </div>
     {:else if (!authStore.user && page.route.id !== '/auth') || (authStore.user && (page.route.id === '/auth' || page.route.id === '/'))}
         <!-- Redirection in progress to avoid layout flash -->
@@ -51,7 +53,7 @@
                 <Loader2 class="absolute animate-pulse text-zinc-650 dark:text-zinc-405" size={20} />
             </div>
             <p class="text-xs font-semibold text-zinc-400 dark:text-zinc-550 uppercase tracking-widest animate-pulse">
-                Redirecting...</p>
+                {t('counters.redirecting')}</p>
         </div>
     {:else}
         <!-- Main route children -->

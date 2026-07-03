@@ -3,6 +3,7 @@
   import { X } from 'lucide-svelte';
   import Modal from './Modal.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { t } from '$lib';
 
   interface Props {
     show?: boolean;
@@ -19,8 +20,8 @@
     show = false,
     title,
     icon: Icon,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText = t('modals.save'),
+    cancelText = t('modals.cancel'),
     confirmClass = 'bg-red-600 hover:bg-red-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(239,68,68,0.2)] dark:shadow-[0_0_15px_rgba(239,68,68,0.3)] active:translate-y-[0.5px]',
     onclose,
     children
@@ -40,7 +41,7 @@
                 variant="ghost"
                 size="md"
                 shape="square"
-                aria-label="Close"
+                aria-label={t('modals.close')}
         >
             <X size={18} />
         </IconButton>

@@ -2,6 +2,7 @@
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Trash2 } from 'lucide-svelte';
   import WarningModal from './WarningModal.svelte';
+  import { t } from '$lib';
 
   interface Props {
     show?: boolean;
@@ -24,17 +25,17 @@
 <WarningModal
         {show}
         onclose={handleClose}
-        title="Delete Counter"
+        title={t('delete.title')}
         icon={Trash2}
-        confirmText="Delete Permanently"
+        confirmText={t('delete.confirmText')}
 >
     <div class="space-y-3">
         <p class="text-sm text-zinc-800 dark:text-zinc-300 leading-relaxed">
-            Are you sure you want to delete <strong class="text-zinc-950 dark:text-zinc-100">"{counter.name}"</strong>?
+            {@html t('delete.body', { name: `<strong class="text-zinc-950 dark:text-zinc-100">"${counter.name}"</strong>` })}
         </p>
-        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-normal">
-            This action cannot be undone. Its counter configuration and value will be permanently deleted, though the
-            activity history log will retain the deletion record.
+        <p class="text-xs text-zinc-405 dark:text-zinc-500 leading-normal">
+            {t('delete.disclaimer')}
         </p>
     </div>
 </WarningModal>
+

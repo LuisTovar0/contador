@@ -1,7 +1,9 @@
 <script lang="ts">
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Clock, Redo2, Settings, Trash2, Undo2 } from 'lucide-svelte';
-  import { dialog } from '$lib/dialog.svelte';
+  import { dialog } from '$lib/components/modals/dialog.svelte.js';
+  import { t } from '$lib';
+
   import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import SetExactValueModal from '$lib/components/modals/SetExactValueModal.svelte';
@@ -38,8 +40,8 @@
     triggerValuePop();
     const finalVal = counter.value + inc;
     const desc = inc >= 0
-        ? `Quick incremented by +${ inc } ${ counter.unit }`.trim()
-        : `Quick decremented by ${ inc } ${ counter.unit }`.trim();
+        ? t('log.quickInc', { val: inc, unit: counter.unit })
+        : t('log.quickDec', { val: Math.abs(inc), unit: counter.unit });
     await counterStore.updateCounterValue(counter.id, finalVal, desc, false, 'Quick Adjust');
   }
 
@@ -90,7 +92,7 @@
         <div class="flex items-center gap-1 shrink-0">
             <!-- Undo button -->
             <IconButton
-                    tooltip="Undo last action"
+                    tooltip={t('counters.undoTooltip')}
                     onclick={() => counterStore.undoCounter(counter.id)}
                     disabled={!counterStore.canUndoCounter(counter.id)}
                     variant="outline"
@@ -102,7 +104,7 @@
 
             <!-- Redo button -->
             <IconButton
-                    tooltip="Redo last action"
+                    tooltip={t('counters.redoTooltip')}
                     onclick={() => counterStore.redoCounter(counter.id)}
                     disabled={!counterStore.canRedoCounter(counter.id)}
                     variant="outline"
@@ -114,7 +116,7 @@
 
             <!-- Settings button -->
             <IconButton
-                    tooltip="Counter Settings"
+                    tooltip={t('counters.settingsTooltip')}
                     onclick={openSettings}
                     variant="outline"
                     size="sm"
@@ -125,7 +127,7 @@
 
             <!-- Delete button -->
             <IconButton
-                    tooltip="Delete counter"
+                    tooltip={t('counters.deleteTooltip')}
                     onclick={openDeleteConfirm}
                     variant="danger-outline"
                     size="sm"
@@ -177,7 +179,7 @@
                     onclick={openCustomAdjust}
                     class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-955 text-zinc-650 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
-                <span>Custom Adjust</span>
+                <span>{t('counters.customAdjust')}</span>
             </button>
 
             <!-- Set value -->
@@ -185,7 +187,7 @@
                     onclick={openSetExactValue}
                     class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-955 text-zinc-650 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
-                <span>Set Value</span>
+                <span>{t('counters.setValue')}</span>
             </button>
         </div>
     </div>
@@ -194,14 +196,14 @@
     <div class="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/60 pt-2.5 mt-1">
         <button
                 onclick={openHistory}
-                class="text-[10px] font-semibold text-zinc-450 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-350 transition-colors flex items-center gap-1 cursor-pointer"
+                class="text-[10px] font-semibold text-zinc-450 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-355 transition-colors flex items-center gap-1 cursor-pointer"
         >
             <Clock size={10} />
-            <span>View Activity Log</span>
+            <span>{t('counters.viewActivityLog')}</span>
         </button>
         {#if localHistory().length > 0}
-			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-650">
-				Last: {formatTime(localHistory()[0].timestamp)}
+			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-655">
+				{t('counters.last')} {formatTime(localHistory()[0].timestamp)}
 			</span>
         {/if}
     </div>

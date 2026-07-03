@@ -3,6 +3,7 @@ import {
 } from 'firebase/auth';
 import { collection, doc, limit, onSnapshot, orderBy, query, writeBatch } from 'firebase/firestore';
 import { auth, db, isFirebaseConfigured } from './firebase';
+import { t } from './i18n.svelte';
 
 export interface Counter {
   id: string;
@@ -368,7 +369,7 @@ class CounterStore {
       prevValue: null,
       newValue: 0,
       delta: null,
-      description: `Created counter "${ name }" with unit "${ unit }"`,
+      description: t('log.created', { name, unit }),
       method: 'Creation',
     };
 
@@ -485,7 +486,7 @@ class CounterStore {
       prevValue: counter.value,
       newValue: counter.value,
       delta: null,
-      description: `Updated settings of counter "${ name }"`,
+      description: t('log.updated', { name }),
       method: 'Settings Update',
     };
 
@@ -523,7 +524,7 @@ class CounterStore {
       prevValue: counter.value,
       newValue: 0,
       delta: null,
-      description: `Deleted counter "${ counter.name }"`,
+      description: t('log.deleted', { name: counter.name }),
       method: 'Deletion',
     };
 
@@ -586,10 +587,11 @@ class CounterStore {
     await this.updateCounterValue(
         action.counterId,
         action.prevValue,
-        `Undo: Reverted "${ action.description }"`,
+        t('log.undo', { desc: action.description }),
         true,
         'Undo',
     );
+
   }
 
   async redoCounter(counterId: string) {
@@ -623,7 +625,7 @@ class CounterStore {
     await this.updateCounterValue(
         action.counterId,
         action.prevValue,
-        `Redo: Reapplied "${ action.description.replace('Redo: ', '') }"`,
+        t('log.redo', { desc: action.description.replace('Redo: ', '').replace('Undo: ', '') }),
         true,
         'Redo',
     );
@@ -648,7 +650,7 @@ class CounterStore {
     await this.updateCounterValue(
         action.counterId,
         action.prevValue,
-        `Undo: Reverted "${ action.description }"`,
+        t('log.undo', { desc: action.description }),
         true,
         'Undo',
     );

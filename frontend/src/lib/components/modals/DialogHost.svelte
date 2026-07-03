@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dialog } from '$lib/dialog.svelte';
+  import { dialog } from '$lib/components/modals/dialog.svelte.js';
 </script>
 
 {#each dialog.dialogs as item (item.id)}

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Modal from './Modal.svelte';
+	import IconButton from './IconButton.svelte';
+	import { tooltip } from './tooltip.svelte.ts';
 	import { counterStore } from '$lib/store.svelte';
 	import { X, Plus, Trash2, Hash, Sparkles } from 'lucide-svelte';
 
@@ -71,30 +73,32 @@
 </script>
 
 <Modal {show} {onclose}>
-	<div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-		<h2 class="text-xl font-bold flex items-center gap-2 text-purple-400">
-			<Sparkles size={20} class="text-purple-400" />
+	<div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
+		<h2 class="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-150">
+			<Sparkles size={20} class="text-purple-650 dark:text-purple-400" />
 			<span>New Counter</span>
 		</h2>
-		<button
+		<IconButton
 			onclick={onclose}
-			class="text-zinc-400 hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-white/5"
+			variant="ghost"
+			size="md"
+			shape="square"
 			aria-label="Close"
 		>
 			<X size={20} />
-		</button>
+		</IconButton>
 	</div>
 
 	<form onsubmit={handleSubmit} class="flex-1 overflow-y-auto space-y-4 pr-1 text-sm">
 		{#if errorMessage}
-			<div class="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-xs">
+			<div class="p-3 bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 rounded-xl text-xs">
 				{errorMessage}
 			</div>
 		{/if}
 
 		<!-- Counter Name -->
 		<div>
-			<label for="counterName" class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1.5"
+			<label for="counterName" class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
 				>Counter Name *</label
 			>
 			<input
@@ -103,13 +107,13 @@
 				bind:value={name}
 				placeholder="e.g. Water Intake, Daily Steps"
 				required
-				class="w-full bg-zinc-950/50 border border-white/10 rounded-xl px-3 py-2 text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50"
+				class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base md:text-sm"
 			/>
 		</div>
 
 		<!-- Unit -->
 		<div>
-			<label for="counterUnit" class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1.5"
+			<label for="counterUnit" class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
 				>Unit (free text)</label
 			>
 			<input
@@ -117,26 +121,25 @@
 				id="counterUnit"
 				bind:value={unit}
 				placeholder="e.g. Liters, reps, cups, km"
-				class="w-full bg-zinc-950/50 border border-white/10 rounded-xl px-3 py-2 text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50"
+				class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base md:text-sm"
 			/>
 		</div>
 
 		<!-- Decimals selection -->
 		<div>
-			<label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1.5"
-				>Decimal Precision</label
-			>
+			<span class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+				>Decimal Precision</span>
 			<div class="grid grid-cols-4 gap-2">
 				{#each [0, 1, 2, 3] as d}
 					<button
 						type="button"
 						onclick={() => (decimals = d)}
-						class="py-2 px-3 rounded-xl border font-semibold transition-all text-center
+						class="py-2 px-1 rounded-xl border font-semibold transition-all text-center cursor-pointer text-xs
 						{decimals === d
-							? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.2)]'
-							: 'bg-zinc-950/30 border-white/5 text-zinc-400 hover:border-white/10'}"
+							? 'bg-purple-50 dark:bg-purple-500/20 border-purple-300 dark:border-purple-500 text-purple-700 dark:text-purple-300 shadow-[0_2px_8px_rgba(168,85,247,0.1)] dark:shadow-[0_0_10px_rgba(168,85,247,0.2)]'
+							: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-450 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
 					>
-						{d} {d === 0 ? '(Integer)' : `(0.${'0'.repeat(d)})`}
+						{d === 0 ? 'Int' : `.${'0'.repeat(d)}`}
 					</button>
 				{/each}
 			</div>
@@ -145,20 +148,19 @@
 		<!-- Default increments -->
 		<div>
 			<div class="flex items-center justify-between mb-1.5">
-				<label class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"
-					>Default Increments / Decrements</label
-				>
-				<span class="text-xs text-zinc-500">({increments.length}/3 buttons)</span>
+				<span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
+					>Default Increments</span>
+				<span class="text-xs text-zinc-400 dark:text-zinc-500">({increments.length}/3 buttons)</span>
 			</div>
 
 			<div class="space-y-2.5">
 				{#each increments as value, index}
 					<div class="flex items-center gap-2">
-						<div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 text-purple-400 font-bold shrink-0">
+						<div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-250 dark:border-white/10 text-zinc-650 dark:text-zinc-400 font-bold shrink-0 text-xs">
 							#{index + 1}
 						</div>
 						<div class="relative flex-1">
-							<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+							<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500">
 								<Hash size={14} />
 							</span>
 							<input
@@ -167,18 +169,20 @@
 								value={value}
 								oninput={(e) => updateIncrementValue(index, e.currentTarget.value)}
 								placeholder="Increment value"
-								class="w-full bg-zinc-950/50 border border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50"
+								class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base"
 							/>
 						</div>
 						{#if increments.length > 1}
-							<button
+							<IconButton
+								tooltip="Remove increment"
 								type="button"
 								onclick={() => removeIncrement(index)}
-								class="p-2 border border-red-500/20 text-red-400 hover:bg-red-500/10 rounded-xl transition-all"
-								title="Delete button"
+								variant="danger-outline"
+								size="md"
+								shape="square"
 							>
 								<Trash2 size={16} />
-							</button>
+							</IconButton>
 						{/if}
 					</div>
 				{/each}
@@ -187,26 +191,26 @@
 					<button
 						type="button"
 						onclick={addIncrement}
-						class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-white/10 hover:border-purple-500/40 text-purple-400 hover:text-purple-300 rounded-xl transition-all bg-white/[0.01]"
+						class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200/60 dark:border-purple-500/20 hover:border-purple-300 dark:hover:border-purple-500/40 text-purple-650 dark:text-purple-400 hover:text-purple-755 dark:hover:text-purple-300 rounded-xl transition-all bg-zinc-50/50 dark:bg-purple-950/10 cursor-pointer text-xs"
 					>
-						<Plus size={16} />
+						<Plus size={14} />
 						<span>Add Increment Button</span>
 					</button>
 				{/if}
 			</div>
 		</div>
 
-		<div class="border-t border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
+		<div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
 			<button
 				type="button"
 				onclick={onclose}
-				class="px-4 py-2 border border-white/10 hover:bg-white/5 text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs"
+				class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
 			>
 				Cancel
 			</button>
 			<button
 				type="submit"
-				class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-zinc-100 rounded-xl font-bold transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] active:scale-[0.98] text-xs"
+				class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_16px_rgba(168,85,247,0.3)] dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] active:translate-y-[0.5px]"
 			>
 				Create Counter
 			</button>

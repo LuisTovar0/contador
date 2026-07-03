@@ -34,14 +34,14 @@ components:
 
 ## Overview
 **Creative North Star: "Neon Glass Utility"**
-A high-tech, energetic, mobile-first utility built for speed and visual satisfaction. The interface uses frosted glass cards (backdrop-blur), crisp glowing neon borders, and sharp typography to evoke a cyberpunk console aesthetic. It takes visual cues from Linear (precision details) and Raycast (speed and efficiency).
+A high-tech, energetic utility built for speed, visual satisfaction, and seamless responsiveness across web and mobile surfaces. The interface uses frosted glass cards (backdrop-blur), crisp glowing neon borders, and sharp typography to evoke a cyberpunk console aesthetic. It takes visual cues from Linear (precision details) and Raycast (speed and efficiency).
 
 ## Colors
 **The Cyberpunk Glow Rule.** Use deep space black (#09090b) as the background canvas. Accentuate interactive and stateful items with neon purple (#a855f7) and neon green (#22c55e).
 **The Tonal Hierarchy Rule.** All surfaces are semi-transparent dark gray glass cards overlaid on glowing radial backgrounds. Text colors must be high-contrast zinc-50 (#fafafa) for headings and active content, and zinc-500 (#71717a) for secondary labels.
 
 ## Typography
-**The Single-Family Rule.** Use a clean, geometric sans-serif (e.g. system-ui, Inter, or Outfit) for all text. Monospace numerals should be preferred for the counter numbers to prevent layout shift during transitions.
+**The Single-Family Rule.** Use a clean, geometric sans-serif (e.g. system-ui, Inter, or Space Grotesk) for all text. Monospace numerals should be preferred for the counter numbers to prevent layout shift during transitions.
 - Display sizes: large, crisp numbers (4rem to 6rem) for current counter values.
 - Labels & Actions: Tighter scale ratios with strong weights (font-semibold, font-bold) for button readability.
 

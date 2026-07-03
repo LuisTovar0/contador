@@ -8,7 +8,7 @@ product
 General-purpose habit, fitness, and daily life tracker. Users tracking recurring numbers (water, workouts, meditation minutes, inventory, habits) on the go.
 
 ## Product Purpose
-An interactive, high-fidelity mobile-first counter app that supports customizable counters, change history log, and undo/redo operations.
+An interactive, high-fidelity responsive counter app for web and mobile that supports customizable counters, change history log, and undo/redo operations.
 
 ## Brand Personality
 Sleek neon-cyberpunk glassmorphism. High-tech, energetic, vibrant purple and green tone theme.
@@ -16,13 +16,13 @@ Sleek neon-cyberpunk glassmorphism. High-tech, energetic, vibrant purple and gre
 ## Anti-references
 - Boring corporate white dashboards.
 - Flat gray panels with no visual hierarchy or depth.
-- Clunky desktop layouts crammed onto a mobile screen.
+- Clunky layouts that fail to respond beautifully to different screen sizes.
 - Generic low-contrast gray text on dark/light backgrounds.
 
 ## Design Principles
 - **Micro-moment Delight**: Fast, energetic transitions and interactions that reward counter updates.
 - **Glass & Glow**: Dynamic frosted-glass layers combined with neon purple/green glows to indicate state.
-- **Mobile Fluidity**: Easy thumb-reach targets for instant tap-to-increment/decrement.
+- **Fluid Responsiveness**: Easy targets and intuitive controls for both mouse clicks and touch taps.
 - **Non-Destructive History**: Clear feedback of actions with simple undo/redo triggers.
 
 ## Accessibility & Inclusion

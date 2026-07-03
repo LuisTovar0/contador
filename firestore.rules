@@ -1,10 +1,72 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Enforce owner check for all counter data and history logs
-    match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null 
-        && request.auth.uid == userId;
+    
+    // Helper: Determine if the request belongs to the resource owner
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      // Allow read/write for the top-level user metadata document
+      allow read, write: if isOwner(userId);
+      
+      // Enforce strict types and schema for counter documents
+      match /counters/{counterId} {
+        allow read, delete: if isOwner(userId);
+        
+        allow create: if isOwner(userId)
+          && request.resource.data.id == counterId
+          && request.resource.data.name is string 
+          && request.resource.data.name.size() > 0 
+          && request.resource.data.name.size() <= 100
+          && request.resource.data.value is number
+          && request.resource.data.decimals is int 
+          && request.resource.data.decimals >= 0 
+          && request.resource.data.decimals <= 20
+          && request.resource.data.unit is string
+          && request.resource.data.increments is list
+          && request.resource.data.increments.size() >= 1 
+          && request.resource.data.increments.size() <= 3
+          && request.resource.data.createdAt is int
+          && request.resource.data.updatedAt is int;
+          
+        allow update: if isOwner(userId)
+          && request.resource.data.id == resource.data.id
+          && request.resource.data.name is string 
+          && request.resource.data.name.size() > 0 
+          && request.resource.data.name.size() <= 100
+          && request.resource.data.value is number
+          && request.resource.data.decimals is int 
+          && request.resource.data.decimals >= 0 
+          && request.resource.data.decimals <= 20
+          && request.resource.data.unit is string
+          && request.resource.data.increments is list
+          && request.resource.data.increments.size() >= 1 
+          && request.resource.data.increments.size() <= 3
+          && request.resource.data.createdAt == resource.data.createdAt // Enforce immutability
+          && request.resource.data.updatedAt is int;
+      }
+      
+      // Enforce immutability and schema for history logs
+      match /history/{historyId} {
+        // Log entries are read-only and write-once. Updates and deletions are forbidden.
+        allow read: if isOwner(userId);
+        
+        allow create: if isOwner(userId)
+          && request.resource.data.id == historyId
+          && request.resource.data.counterId is string
+          && request.resource.data.counterName is string
+          && request.resource.data.timestamp is int
+          && request.resource.data.type in ['create', 'increment', 'decrement', 'set', 'delete']
+          && (request.resource.data.prevValue == null || request.resource.data.prevValue is number)
+          && request.resource.data.newValue is number
+          && (request.resource.data.delta == null || request.resource.data.delta is number)
+          && request.resource.data.description is string
+          && (!('method' in request.resource.data) || request.resource.data.method is string);
+          
+        allow update, delete: if false; 
+      }
     }
   }
 }

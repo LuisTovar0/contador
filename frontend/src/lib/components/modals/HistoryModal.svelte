@@ -1,7 +1,7 @@
 <script lang="ts">
   import { counterStore } from '$lib/store.svelte';
   import { ArrowDownRight, ArrowUpRight, Calendar, Clock, Edit3, PlusCircle, Search, Trash2, X } from 'lucide-svelte';
-  import IconButton from './IconButton.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
 
   interface Props {
@@ -73,7 +73,7 @@
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4 shrink-0">
         <div>
             <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                <Clock size={18} class="text-purple-650 dark:text-purple-400" />
+                <Clock size={18} class="text-primary-600 dark:text-primary-400" />
                 <span>{counterId ? `${ counterName() } Activity` : 'Activity History'}</span>
             </h2>
             <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
@@ -101,7 +101,7 @@
                     type="text"
                     bind:value={searchQuery}
                     placeholder={counterId ? "Search changes..." : "Search by counter name..."}
-                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
     </div>
@@ -123,11 +123,11 @@
                         <!-- Icon marker -->
                         <div class="absolute -left-[27px] top-0.5 flex items-center justify-center w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 text-xs shadow-sm dark:shadow-md">
                             {#if entry.type === 'create'}
-                                <PlusCircle size={12} class="text-purple-600 dark:text-purple-400" />
+                                <PlusCircle size={12} class="text-primary-600 dark:text-primary-400" />
                             {:else if entry.type === 'increment'}
-                                <ArrowUpRight size={12} class="text-emerald-600 dark:text-emerald-400" />
+                                <ArrowUpRight size={12} class="text-primary-600 dark:text-primary-400" />
                             {:else if entry.type === 'decrement'}
-                                <ArrowDownRight size={12} class="text-purple-650 dark:text-purple-400" />
+                                <ArrowDownRight size={12} class="text-secondary-600 dark:text-secondary-400" />
                             {:else if entry.type === 'set'}
                                 <Edit3 size={11} class="text-blue-600 dark:text-blue-400" />
                             {:else if entry.type === 'delete'}
@@ -145,7 +145,7 @@
                                         </span>
                                     {/if}
                                     {#if entry.method}
-                                        <span class="text-[9px] bg-purple-500/10 dark:bg-purple-500/20 border border-purple-500/20 dark:border-purple-500/30 text-purple-700 dark:text-purple-400 font-semibold px-1.5 py-0.5 rounded-full select-none">
+                                        <span class="text-[9px] bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/20 dark:border-primary-500/30 text-primary-700 dark:text-primary-400 font-semibold px-1.5 py-0.5 rounded-full select-none">
                                             {entry.method}
                                         </span>
                                     {/if}
@@ -165,7 +165,7 @@
                                     <span>→</span>
                                     <span class="text-zinc-800 dark:text-zinc-300 font-bold">{entry.newValue}</span>
                                     {#if entry.delta !== null}
-                                        <span class={entry.delta > 0 ? 'text-emerald-650 dark:text-emerald-450 font-semibold' : 'text-purple-650 dark:text-purple-400 font-semibold'}>
+                                        <span class={entry.delta > 0 ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-secondary-600 dark:text-secondary-400 font-semibold'}>
 											({entry.delta > 0 ? '+' : ''}{entry.delta})
 										</span>
                                     {/if}
@@ -182,7 +182,7 @@
                     <button
                             type="button"
                             onclick={loadMore}
-                            class="px-5 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-purple-650 dark:text-purple-400 hover:text-purple-750 dark:hover:text-purple-300 rounded-xl font-bold transition-all text-xs cursor-pointer active:scale-[0.98] shadow-sm"
+                            class="px-5 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl font-bold transition-all text-xs cursor-pointer active:scale-[0.98] shadow-sm"
                     >
                         Load More
                     </button>

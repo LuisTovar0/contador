@@ -1,7 +1,7 @@
 <script lang="ts">
   import { counterStore } from '$lib/store.svelte';
-  import { Hash, Plus, Sparkles, Trash2, X } from 'lucide-svelte';
-  import IconButton from './IconButton.svelte';
+  import { Hash, Plus, Trash2, X } from 'lucide-svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
 
   interface Props {
@@ -71,7 +71,6 @@
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
         <h2 class="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-150">
-            <Sparkles size={20} class="text-purple-650 dark:text-purple-400" />
             <span>New Counter</span>
         </h2>
         <IconButton
@@ -104,7 +103,7 @@
                     bind:value={name}
                     placeholder="e.g. Water Intake, Daily Steps"
                     required
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
@@ -119,7 +118,7 @@
                     id="counterUnit"
                     bind:value={unit}
                     placeholder="e.g. Liters, reps, cups, km"
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
@@ -134,7 +133,7 @@
                             onclick={() => (decimals = d)}
                             class="py-2 px-1 rounded-xl border font-semibold transition-all text-center cursor-pointer text-xs
 						{decimals === d
-							? 'bg-purple-50 dark:bg-purple-500/20 border-purple-300 dark:border-purple-500 text-purple-700 dark:text-purple-300 shadow-[0_2px_8px_rgba(168,85,247,0.1)] dark:shadow-[0_0_10px_rgba(168,85,247,0.2)]'
+							? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
 							: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-450 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
                     >
                         {d === 0 ? 'Int' : `.${ '0'.repeat(d) }`}
@@ -166,7 +165,7 @@
                                     step={decimals === 0 ? '1' : (1 / Math.pow(10, decimals)).toString()}
                                     bind:value={increments[index]}
                                     placeholder="Increment value"
-                                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-base"
+                                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base"
                             />
                         </div>
                         {#if increments.length > 1}
@@ -188,7 +187,7 @@
                     <button
                             type="button"
                             onclick={addIncrement}
-                            class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200/60 dark:border-purple-500/20 hover:border-purple-300 dark:hover:border-purple-500/40 text-purple-650 dark:text-purple-400 hover:text-purple-755 dark:hover:text-purple-300 rounded-xl transition-all bg-zinc-50/50 dark:bg-purple-950/10 cursor-pointer text-xs"
+                            class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200/60 dark:border-primary-500/20 hover:border-primary-300 dark:hover:border-primary-500/40 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-all bg-zinc-50/50 dark:bg-primary-950/10 cursor-pointer text-xs"
                     >
                         <Plus size={14} />
                         <span>Add Increment Button</span>
@@ -207,7 +206,7 @@
             </button>
             <button
                     type="submit"
-                    class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_16px_rgba(168,85,247,0.3)] dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] active:translate-y-[0.5px]"
+                    class="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold transition-all text-xs cursor-pointer shadow-primary-glow hover:shadow-primary-glow active:translate-y-[0.5px]"
             >
                 Create Counter
             </button>

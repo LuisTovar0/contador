@@ -4,12 +4,12 @@
     Clock, EllipsisVertical, Redo2, Settings, Trash2, Undo2, Keyboard, PenLine
   } from 'lucide-svelte';
   import { dialog } from '$lib/dialog.svelte';
-  import HistoryModal from './HistoryModal.svelte';
-  import IconButton from './IconButton.svelte';
-  import SetExactValueModal from './SetExactValueModal.svelte';
-  import CustomAdjustModal from './CustomAdjustModal.svelte';
-  import DeleteConfirmModal from './DeleteConfirmModal.svelte';
-  import SettingsModal from './SettingsModal.svelte';
+  import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import SetExactValueModal from '$lib/components/modals/SetExactValueModal.svelte';
+  import CustomAdjustModal from '$lib/components/modals/CustomAdjustModal.svelte';
+  import DeleteConfirmModal from '$lib/components/modals/DeleteConfirmModal.svelte';
+  import SettingsModal from '$lib/components/modals/SettingsModal.svelte';
 
   interface Props {
     counter: Counter;
@@ -93,8 +93,8 @@
         <div class="flex items-center gap-2 select-none justify-end w-auto">
             <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold">Value:</span>
             <span
-                    class="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-50 tabular-nums transition-all duration-100
-				{valPopAnimation ? 'scale-110 text-purple-650 dark:text-purple-400' : 'scale-100'}"
+                    class="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-550 tabular-nums transition-all duration-100
+				{valPopAnimation ? 'scale-110 text-primary-600 dark:text-primary-400' : 'scale-100'}"
             >
 				{formatVal(counter.value)}
 			</span>
@@ -107,17 +107,19 @@
                 <div class="flex items-center gap-1 shrink-0">
                     <button
                             onclick={() => handleQuickIncrement(-Math.abs(inc))}
-                            class="px-2.5 py-1 text-xs border border-zinc-200 dark:border-zinc-800 rounded-lg font-semibold transition-all active:translate-y-[0.5px] cursor-pointer
-						bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/10 hover:border-purple-200 dark:hover:border-purple-900/30 hover:text-purple-650 dark:hover:text-purple-400 hover:shadow-[0_0_12px_rgba(168,85,247,0.15)]"
+                            class="relative overflow-hidden px-2.5 py-1 text-xs border border-secondary-200/50 dark:border-secondary-900/30 border-t-secondary-100/50 dark:border-t-secondary-400/25 border-l-secondary-100/50 dark:border-l-secondary-400/25 rounded-lg font-semibold transition-all active:translate-y-[0.5px] cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
+						bg-secondary-500/5 dark:bg-secondary-500/10 text-secondary-700 dark:text-secondary-400 hover:bg-secondary-500/15 dark:hover:bg-secondary-500/20 hover:border-secondary-300 dark:hover:border-secondary-700/50 hover:shadow-secondary-glow"
                     >
-                        -{inc}
+                        <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
+                        <span class="relative z-10">-{inc}</span>
                     </button>
                     <button
                             onclick={() => handleQuickIncrement(Math.abs(inc))}
-                            class="px-2.5 py-1 text-xs border border-zinc-200 dark:border-zinc-800 rounded-lg font-semibold transition-all active:translate-y-[0.5px] cursor-pointer
-						bg-zinc-50 dark:bg-zinc-955 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 hover:border-emerald-200 dark:hover:border-emerald-900/30 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-[0_0_12px_rgba(34,197,94,0.15)]"
+                            class="relative overflow-hidden px-2.5 py-1 text-xs border border-primary-200/50 dark:border-primary-900/30 border-t-primary-100/50 dark:border-t-primary-400/25 border-l-primary-100/50 dark:border-l-primary-400/25 rounded-lg font-semibold transition-all active:translate-y-[0.5px] cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
+						bg-primary-500/5 dark:bg-primary-500/10 text-primary-700 dark:text-primary-400 hover:bg-primary-500/15 dark:hover:bg-primary-500/20 hover:border-primary-300 dark:hover:border-primary-700/50 hover:shadow-primary-glow"
                     >
-                        +{inc}
+                        <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
+                        <span class="relative z-10">+{inc}</span>
                     </button>
                 </div>
             {/each}
@@ -162,7 +164,9 @@
                 </IconButton>
 
                 {#if showActionMenu}
-                    <div class="absolute right-0 mt-1.5 w-48 rounded-xl border border-zinc-200/80 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-955/95 backdrop-blur-md shadow-lg dark:shadow-[0_10px_30px_rgba(0,0,0,0.3)] z-50 overflow-hidden flex flex-col py-1">
+                    <div class="absolute right-0 mt-1.5 w-48 rounded-xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 bg-white/55 dark:bg-black/75 backdrop-blur-xl shadow-[0_10px_30px_rgba(9,9,11,0.08),_inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.35),_inset_0_1px_0_rgba(255,255,255,0.12)] z-50 overflow-hidden flex flex-col py-1 ring-1 ring-black/5 dark:ring-white/5">
+                        <!-- Specular reflection glass highlight -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
                         <!-- Adjust Custom -->
                         <button
                                 type="button"

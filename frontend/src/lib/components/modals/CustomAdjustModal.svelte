@@ -42,7 +42,7 @@
 
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-purple-655 dark:text-purple-400 flex items-center gap-2">
+        <h2 class="text-lg font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <PenLine size={18} />
             <span>Custom Adjustment</span>
         </h2>
@@ -66,7 +66,7 @@
                     onclick={() => (isCustomPositive = true)}
                     class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
 				{isCustomPositive
-					? 'bg-emerald-50 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500 text-emerald-700 dark:text-emerald-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-[0_0_10px_rgba(34,197,94,0.15)]'
+					? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
 					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
             >
                 <Plus size={14} />
@@ -77,7 +77,7 @@
                     onclick={() => (isCustomPositive = false)}
                     class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
 				{!isCustomPositive
-					? 'bg-purple-50 dark:bg-purple-500/20 border-purple-300 dark:border-purple-500 text-purple-700 dark:text-purple-300 shadow-[0_2px_8px_rgba(168,85,247,0.1)] dark:shadow-[0_0_10px_rgba(168,85,247,0.15)]'
+					? 'bg-secondary-50 dark:bg-secondary-500/20 border-secondary-300 dark:border-secondary-500 text-secondary-700 dark:text-secondary-300 shadow-[0_2px_8px_rgba(124,58,237,0.1)] dark:shadow-secondary-glow'
 					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
             >
                 <Minus size={14} />
@@ -96,7 +96,7 @@
                     min="0"
                     step={counter.decimals === 0 ? '1' : (1 / Math.pow(10, counter.decimals)).toString()}
                     bind:value={customAdjustInput}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 font-mono text-base"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 font-mono text-base"
             />
         </div>
     </div>
@@ -113,7 +113,7 @@
                 type="button"
                 onclick={handleCustomAdjust}
                 class="px-5 py-2.5 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer
-			{isCustomPositive ? 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_4px_12px_rgba(16,185,129,0.2)] dark:shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-purple-600 hover:bg-purple-500 shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)]'}"
+			{isCustomPositive ? 'bg-primary-600 hover:bg-primary-500 shadow-primary-glow' : 'bg-secondary-600 hover:bg-secondary-500 shadow-secondary-glow'}"
         >
             Apply {isCustomPositive ? 'Addition' : 'Subtraction'}
         </button>

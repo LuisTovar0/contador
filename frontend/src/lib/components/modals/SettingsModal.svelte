@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Hash, Plus, Settings, Trash2, X } from 'lucide-svelte';
-  import IconButton from './IconButton.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
 
   interface Props {
@@ -71,7 +71,7 @@
 
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-purple-650 dark:text-purple-400 flex items-center gap-2">
+        <h2 class="text-lg font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <Settings size={18} />
             <span>Counter Settings</span>
         </h2>
@@ -103,7 +103,7 @@
                         bind:value={editName}
                         placeholder="e.g. Water Intake, Daily Steps"
                         required
-                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 text-base md:text-sm"
+                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
                 />
             </div>
 
@@ -118,7 +118,7 @@
                         id="editCounterUnit-{counter.id}"
                         bind:value={editUnit}
                         placeholder="e.g. Liters, reps, cups, km"
-                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 text-base md:text-sm"
+                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
                 />
             </div>
 
@@ -133,7 +133,7 @@
                                 onclick={() => (editDecimals = d)}
                                 class="py-2 px-1 rounded-xl border font-semibold transition-all text-center cursor-pointer text-xs
 							{editDecimals === d
-								? 'bg-purple-50 dark:bg-purple-500/20 border-purple-300 dark:border-purple-500 text-purple-700 dark:text-purple-300 shadow-[0_2px_8px_rgba(168,85,247,0.1)] dark:shadow-[0_0_10px_rgba(168,85,247,0.2)]'
+								? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
 								: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-400 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
                         >
                             {d === 0 ? 'Int' : `.${ '0'.repeat(d) }`}
@@ -153,11 +153,11 @@
                 <div class="space-y-2.5">
                     {#each editIncrements as _, index}
                         <div class="flex items-center gap-2">
-                            <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-250 dark:border-white/10 text-purple-600 dark:text-purple-400 font-bold shrink-0 text-xs">
+                            <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-250 dark:border-white/10 text-primary-650 dark:text-primary-400 font-bold shrink-0 text-xs">
                                 #{index + 1}
                             </div>
                             <div class="relative flex-1">
-								<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-505">
+								<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500">
 									<Hash size={14} />
 								</span>
                                 <input
@@ -165,7 +165,7 @@
                                         step={editDecimals === 0 ? '1' : (1 / Math.pow(10, editDecimals)).toString()}
                                         bind:value={editIncrements[index]}
                                         placeholder="Increment value"
-                                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 text-base"
+                                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base"
                                 />
                             </div>
                             {#if editIncrements.length > 1}
@@ -187,7 +187,7 @@
                         <button
                                 type="button"
                                 onclick={addEditIncrement}
-                                class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200 dark:border-white/10 hover:border-purple-300 dark:hover:border-purple-500/40 text-purple-600 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-200 rounded-xl transition-all bg-zinc-50/50 dark:bg-white/1 cursor-pointer text-xs"
+                                class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200 dark:border-white/10 hover:border-primary-300 dark:hover:border-primary-500/40 text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-200 rounded-xl transition-all bg-zinc-50/50 dark:bg-white/1 cursor-pointer text-xs"
                         >
                             <Plus size={14} />
                             <span>Add Increment Button</span>
@@ -207,7 +207,7 @@
             </button>
             <button
                     type="submit"
-                    class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_16px_rgba(168,85,247,0.3)] dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] active:scale-[0.98]"
+                    class="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-primary-glow hover:shadow-primary-glow active:scale-[0.98]"
             >
                 Save Settings
             </button>

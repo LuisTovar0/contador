@@ -2,12 +2,12 @@
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Clock, Redo2, Settings, Trash2, Undo2 } from 'lucide-svelte';
   import { dialog } from '$lib/dialog.svelte';
-  import HistoryModal from './HistoryModal.svelte';
-  import IconButton from './IconButton.svelte';
-  import SetExactValueModal from './SetExactValueModal.svelte';
-  import CustomAdjustModal from './CustomAdjustModal.svelte';
-  import DeleteConfirmModal from './DeleteConfirmModal.svelte';
-  import SettingsModal from './SettingsModal.svelte';
+  import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import SetExactValueModal from '$lib/components/modals/SetExactValueModal.svelte';
+  import CustomAdjustModal from '$lib/components/modals/CustomAdjustModal.svelte';
+  import DeleteConfirmModal from '$lib/components/modals/DeleteConfirmModal.svelte';
+  import SettingsModal from '$lib/components/modals/SettingsModal.svelte';
 
   interface Props {
     counter: Counter;
@@ -72,8 +72,13 @@
 </script>
 
 <div
-        class="relative overflow-hidden rounded-2xl border border-zinc-200/60 dark:border-purple-500/20 bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md p-5 shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-500/40 dark:hover:shadow-[0_0_25px_rgba(168,85,247,0.15)] transition-all duration-300 flex flex-col gap-4"
+        class="group relative overflow-hidden rounded-2xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 bg-white/25 dark:bg-black/35 backdrop-blur-xl p-5 shadow-[0_8px_32px_0_rgba(9,9,11,0.06),_inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.37),_inset_0_1px_0_0_rgba(255,255,255,0.12)] hover:shadow-lg hover:-translate-y-1 hover:scale-[1.015] hover:border-primary-300/80 dark:hover:border-primary-500/50 hover:shadow-primary-glow dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_25px_rgba(16,185,129,0.2),_inset_0_1px_0_0_rgba(255,255,255,0.15)] transition-all duration-500 flex flex-col gap-4 ring-1 ring-black/5 dark:ring-white/5"
 >
+    <!-- Specular reflection glass highlight -->
+    <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/55 dark:group-hover:from-white/20 group-hover:translate-x-1.5 group-hover:translate-y-1.5 transition-all duration-500 pointer-events-none"></div>
+
+    <!-- Shimmer reflection sweep -->
+    <div class="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/30 dark:via-white/12 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></div>
     <!-- Header -->
     <div class="flex items-start justify-between">
         <div class="min-w-0 flex-1 pr-2">
@@ -134,8 +139,8 @@
     <!-- Value display -->
     <div class="flex flex-col items-center justify-center py-3 select-none">
         <div
-                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-550 tabular-nums transition-all duration-100 drop-shadow-[0_0_8px_rgba(168,85,247,0.05)] dark:drop-shadow-[0_0_15px_rgba(168,85,247,0.15)]
-			{valPopAnimation ? 'scale-105 text-purple-650 dark:text-purple-400' : 'scale-100'}"
+                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-550 tabular-nums transition-all duration-100 drop-shadow-[0_0_8px_rgba(16,185,129,0.08)] dark:drop-shadow-[0_0_15px_rgba(16,185,129,0.2)]
+			{valPopAnimation ? 'scale-105 text-primary-600 dark:text-primary-400' : 'scale-100'}"
         >
             <span>{formatVal(counter.value)}</span>
             <span class="w-min">{counter.unit}</span>
@@ -150,18 +155,20 @@
                 <!-- Decrement -->
                 <button
                         onclick={() => handleQuickIncrement(-Math.abs(inc))}
-                        class="py-2 px-3 border border-zinc-200 dark:border-zinc-800 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-sm cursor-pointer
-					bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/10 hover:border-purple-200 dark:hover:border-purple-900/30 hover:text-purple-655 dark:hover:text-purple-400 hover:shadow-[0_0_12px_rgba(168,85,247,0.15)]"
+                        class="relative overflow-hidden py-2 px-3 border border-secondary-200/50 dark:border-secondary-900/30 border-t-secondary-100/50 dark:border-t-secondary-400/25 border-l-secondary-100/50 dark:border-l-secondary-400/25 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] cursor-pointer
+					bg-secondary-500/5 dark:bg-secondary-500/10 text-secondary-700 dark:text-secondary-400 hover:bg-secondary-500/15 dark:hover:bg-secondary-500/20 hover:border-secondary-300 dark:hover:border-secondary-700/50 hover:shadow-secondary-glow"
                 >
-                    <span>-{Math.abs(inc)}</span>
+                    <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
+                    <span class="relative z-10">-{Math.abs(inc)}</span>
                 </button>
                 <!-- Increment -->
                 <button
                         onclick={() => handleQuickIncrement(Math.abs(inc))}
-                        class="py-2 px-3 border border-zinc-200 dark:border-zinc-800 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-sm cursor-pointer
-					bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 hover:border-emerald-200 dark:hover:border-emerald-900/30 hover:text-emerald-655 dark:hover:text-emerald-400 hover:shadow-[0_0_12px_rgba(34,197,94,0.15)]"
+                        class="relative overflow-hidden py-2 px-3 border border-primary-200/50 dark:border-primary-900/30 border-t-primary-100/50 dark:border-t-primary-400/25 border-l-primary-100/50 dark:border-l-primary-400/25 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] cursor-pointer
+					bg-primary-500/5 dark:bg-primary-500/10 text-primary-700 dark:text-primary-400 hover:bg-primary-500/15 dark:hover:bg-primary-500/20 hover:border-primary-300 dark:hover:border-primary-700/50 hover:shadow-primary-glow"
                 >
-                    <span>+{Math.abs(inc)}</span>
+                    <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
+                    <span class="relative z-10">+{Math.abs(inc)}</span>
                 </button>
             {/each}
 

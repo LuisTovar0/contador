@@ -2,7 +2,7 @@
   import './layout.css';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import DialogHost from '$lib/components/DialogHost.svelte';
+  import DialogHost from '$lib/components/modals/DialogHost.svelte';
   import { authStore } from '$lib/store.svelte';
   import { Loader2 } from 'lucide-svelte';
 
@@ -24,14 +24,14 @@
 <svelte:head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
           rel="stylesheet">
 </svelte:head>
 
 <main class="min-h-screen grid-bg bg-zinc-50/20 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col items-center p-4 md:p-8 overflow-x-hidden relative font-sans transition-colors duration-300">
     <!-- Ambient glowing backgrounds for Cyberpunk aesthetic -->
-    <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-purple-500/10 dark:bg-purple-650/12 rounded-full blur-[120px] pointer-events-none -z-10"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-emerald-500/8 dark:bg-emerald-600/8 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed top-[5%] left-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-primary-500/22 dark:bg-primary-600/15 rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-1"></div>
+    <div class="fixed bottom-[5%] right-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-secondary-500/18 dark:bg-secondary-600/8 rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-2"></div>
 
     {#if authStore.loading}
         <!-- Loading state screen -->

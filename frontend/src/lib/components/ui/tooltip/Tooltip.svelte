@@ -128,7 +128,7 @@
             bind:this={tooltipEl}
             transition:fade={{ duration: 120 }}
             role="tooltip"
-            class="absolute z-[9999] pointer-events-none px-2.5 py-1.5 rounded-lg border border-zinc-250 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-950/80 text-[11px] font-medium text-zinc-700 dark:text-zinc-200 shadow-md dark:shadow-[0_0_15px_rgba(168,85,247,0.15)] backdrop-blur-md whitespace-nowrap tracking-wide select-none"
+            class="absolute z-[9999] pointer-events-none px-2.5 py-1.5 rounded-lg border border-white/40 dark:border-primary-500/20 bg-white/95 dark:bg-zinc-950/80 text-[11px] font-medium text-zinc-700 dark:text-zinc-200 shadow-md dark:shadow-primary-glow backdrop-blur-md whitespace-nowrap tracking-wide select-none"
     >
         {text}
     </div>

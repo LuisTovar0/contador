@@ -2,7 +2,7 @@
   import type { Snippet } from 'svelte';
   import { X } from 'lucide-svelte';
   import Modal from './Modal.svelte';
-  import IconButton from './IconButton.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
 
   interface Props {
     show?: boolean;

@@ -36,7 +36,7 @@
 
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-purple-650 dark:text-purple-400 flex items-center gap-2">
+        <h2 class="text-lg font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
             <Keyboard size={18} />
             <span>Set Exact Value</span>
         </h2>
@@ -62,7 +62,7 @@
                     id="newValue-{counter.id}"
                     step={counter.decimals === 0 ? '1' : (1 / Math.pow(10, counter.decimals)).toString()}
                     bind:value={newValueInput}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 font-mono text-base"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 font-mono text-base"
             />
         </div>
     </div>
@@ -78,7 +78,7 @@
         <button
                 type="button"
                 onclick={handleSetExactValue}
-                class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+                class="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-primary-glow"
         >
             Save Value
         </button>

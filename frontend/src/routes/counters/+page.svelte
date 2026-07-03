@@ -1,11 +1,11 @@
 <script lang="ts">
-  import CounterCard from '$lib/components/CounterCard.svelte';
-  import CounterRow from '$lib/components/CounterRow.svelte';
-  import CreateCounterModal from '$lib/components/CreateCounterModal.svelte';
-  import LogoutWarningModal from '$lib/components/LogoutWarningModal.svelte';
-  import HistoryModal from '$lib/components/HistoryModal.svelte';
-  import IconButton from '$lib/components/IconButton.svelte';
-  import { tooltip } from '$lib/components/tooltip.svelte.js';
+  import CounterCard from '$lib/components/counter/CounterCard.svelte';
+  import CounterRow from '$lib/components/counter/CounterRow.svelte';
+  import CreateCounterModal from '$lib/components/modals/CreateCounterModal.svelte';
+  import LogoutWarningModal from '$lib/components/modals/LogoutWarningModal.svelte';
+  import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { tooltip } from '$lib/components/ui/tooltip/tooltip.svelte.js';
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, counterStore, themeStore } from '$lib/store.svelte';
   import { dialog } from '$lib/dialog.svelte';
@@ -98,13 +98,15 @@
 <!-- MAIN APPLICATION WORKFLOW -->
 <div class="w-full flex flex-col gap-6">
     <!-- Header -->
-    <header class="px-5 py-3.5 rounded-2xl border border-zinc-200/60 dark:border-purple-500/20 flex items-center justify-between shrink-0 bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md shadow-sm dark:shadow-[0_0_20px_rgba(168,85,247,0.05)] relative z-20 transition-colors duration-300">
+    <header class="px-5 py-3.5 rounded-2xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 flex items-center justify-between shrink-0 bg-white/25 dark:bg-black/35 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(9,9,11,0.04),_inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3),_inset_0_1px_0_0_rgba(255,255,255,0.12)] relative z-20 transition-colors duration-300 ring-1 ring-black/5 dark:ring-white/5 overflow-hidden">
+        <!-- Specular reflection glass highlight -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
         <div class="flex items-center gap-2 select-none">
             <div>
-                <h1 class="text-sm font-black text-purple-650 dark:text-purple-400 flex items-center gap-1.5">
+                <h1 class="text-sm font-black text-primary-600 dark:text-primary-400 flex items-center gap-1.5">
                     <span>Contador</span>
                     {#if !isFirebaseConfigured}
-                        <span class="text-[9px] bg-purple-500/10 dark:bg-purple-500/20 border border-purple-500/20 dark:border-purple-500/30 text-purple-700 dark:text-purple-400 font-bold px-2 py-0.5 rounded-md">Demo</span>
+                        <span class="text-[9px] bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/20 dark:border-primary-500/30 text-primary-700 dark:text-primary-400 font-bold px-2 py-0.5 rounded-md">Demo</span>
                     {/if}
                 </h1>
             </div>
@@ -163,14 +165,14 @@
                         type="text"
                         bind:value={searchQuery}
                         placeholder="Search counters..."
-                        class="w-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md border border-zinc-200/60 dark:border-purple-500/20 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-xs shadow-sm"
+                        class="w-full bg-white/25 dark:bg-black/35 backdrop-blur-xl border border-zinc-200/55 dark:border-primary-500/20 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-all focus:ring-1 focus:ring-primary-500/40 text-xs shadow-sm"
                 />
             </div>
 
             <!-- View Controls -->
             <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
                 <!-- View Mode Toggler (segment control) -->
-                <div class="bg-zinc-200/40 dark:bg-zinc-950/40 p-1 border border-zinc-250 dark:border-purple-500/10 rounded-xl flex items-center shadow-sm">
+                <div class="bg-zinc-200/40 dark:bg-zinc-950/40 p-1 border border-zinc-200 dark:border-zinc-800 rounded-xl flex items-center shadow-sm">
                     <button
                             onclick={() => {
 							viewMode = 'grid';
@@ -178,7 +180,7 @@
 						}}
                             class="p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center
 						{viewMode === 'grid'
-							? 'bg-white dark:bg-zinc-900 text-purple-655 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
+							? 'bg-white dark:bg-zinc-900 text-primary-600 dark:text-primary-400 shadow-sm border border-zinc-200/65 dark:border-primary-500/30'
 							: 'text-zinc-450 hover:text-zinc-750 dark:hover:text-zinc-300'}"
                             use:tooltip={"Grid view"}
                     >
@@ -191,7 +193,7 @@
 						}}
                             class="p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center
 						{viewMode === 'list'
-							? 'bg-white dark:bg-zinc-900 text-purple-655 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
+							? 'bg-white dark:bg-zinc-900 text-primary-600 dark:text-primary-400 shadow-sm border border-zinc-200/65 dark:border-primary-500/30'
 							: 'text-zinc-450 hover:text-zinc-755 dark:hover:text-zinc-300'}"
                             use:tooltip={"List view"}
                     >
@@ -217,8 +219,10 @@
             </div>
         {:else}
             <!-- Counter Grid or List Switch -->
-            {#if viewMode === 'list'}
-                <div class="bg-white/70 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-purple-500/20 rounded-2xl shadow-sm overflow-hidden flex flex-col backdrop-blur-md">
+             {#if viewMode === 'list'}
+                <div class="bg-white/25 dark:bg-black/35 border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 rounded-2xl shadow-[0_8px_32px_0_rgba(9,9,11,0.06),_inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.37),_inset_0_1px_0_0_rgba(255,255,255,0.12)] overflow-hidden flex flex-col backdrop-blur-xl relative ring-1 ring-black/5 dark:ring-white/5">
+                    <!-- Specular reflection glass highlight -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
                     <!-- List Header (Desktop-only header row) -->
                     <div class="hidden md:grid md:grid-cols-[2.5fr_1fr_1.8fr_1.5fr] items-center gap-4 py-2.5 px-4 bg-zinc-50/50 dark:bg-zinc-950/20 border-b border-zinc-200 dark:border-zinc-800 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                         <span>Counter Name</span>
@@ -261,14 +265,16 @@
 
 <!-- BOTTOM TOAST NOTIFICATION (Undo HUD) -->
 {#if showToast && lastActionToast}
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2.5rem)] max-w-sm px-4 py-3 bg-white/80 dark:bg-zinc-900/70 border border-zinc-200/60 dark:border-purple-500/20 rounded-xl shadow-xl backdrop-blur-md flex items-center justify-between gap-3 text-xs leading-normal">
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2.5rem)] max-w-sm px-4 py-3 bg-white/30 dark:bg-black/45 border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 rounded-xl shadow-[0_12px_40px_rgba(9,9,11,0.08),_inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.4),_inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-xl flex items-center justify-between gap-3 text-xs leading-normal ring-1 ring-black/5 dark:ring-white/5 overflow-hidden">
+        <!-- Specular reflection glass highlight -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
         <div class="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 min-w-0">
-            <CheckCircle2 size={16} class="text-emerald-500 shrink-0" />
+            <CheckCircle2 size={16} class="text-primary-500 shrink-0" />
             <p class="truncate font-medium">{lastActionToast?.description}</p>
         </div>
         <button
                 onclick={handleUndo}
-                class="text-purple-650 dark:text-purple-400 hover:underline font-bold flex items-center gap-1 cursor-pointer shrink-0 uppercase tracking-wider text-[10px]"
+                class="text-primary-600 dark:text-primary-400 hover:underline font-bold flex items-center gap-1 cursor-pointer shrink-0 uppercase tracking-wider text-[10px]"
         >
             <RotateCcw size={10} />
             <span>Undo</span>

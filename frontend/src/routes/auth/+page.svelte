@@ -2,7 +2,7 @@
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, themeStore } from '$lib/store.svelte';
   import { CircleAlert, Lock, LogIn, Moon, Play, Sun, User, UserPlus } from 'lucide-svelte';
-  import IconButton from '$lib/components/IconButton.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
 
   let activeTab = $state<'login' | 'register'>('login');
   let username = $state('');
@@ -61,7 +61,9 @@
 </svelte:head>
 
 <div class="flex-1 flex items-center justify-center py-12 px-4 w-full relative z-10">
-    <div class="w-full max-w-md bg-white/75 dark:bg-zinc-900/60 backdrop-blur-lg border border-zinc-200/60 dark:border-purple-500/25 p-6 rounded-2xl shadow-lg dark:shadow-[0_0_30px_rgba(168,85,247,0.1)] relative overflow-hidden transition-all duration-300">
+    <div class="w-full max-w-md bg-white/25 dark:bg-black/35 backdrop-blur-xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 p-6 rounded-2xl shadow-[0_12px_40px_0_rgba(9,9,11,0.06),_inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_16px_48px_0_rgba(0,0,0,0.37),_inset_0_1px_0_0_rgba(255,255,255,0.12)] relative overflow-hidden transition-all duration-300 ring-1 ring-black/5 dark:ring-white/5">
+        <!-- Specular reflection glass highlight -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
         <!-- Theme Switcher floating button in Auth Card -->
         <IconButton
                 tooltip={themeStore.current === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -81,7 +83,7 @@
 
         <!-- Logo & Tagline -->
         <div class="text-center mb-6 mt-2 relative z-10 select-none">
-            <h1 class="text-2xl font-black tracking-tight text-purple-650 dark:text-purple-400">Contador</h1>
+            <h1 class="text-2xl font-black tracking-tight text-primary-600 dark:text-primary-400">Contador</h1>
             <p class="text-xs text-zinc-550 dark:text-zinc-400 mt-1 font-medium">Para contar coisas</p>
         </div>
 
@@ -96,7 +98,7 @@
         {/if}
 
         <!-- Tabs -->
-        <div class="grid grid-cols-2 gap-1 p-1 bg-zinc-100/80 dark:bg-zinc-950/60 rounded-xl border border-zinc-200/50 dark:border-purple-500/10 mb-5 relative z-10 shrink-0 select-none shadow-inner">
+        <div class="grid grid-cols-2 gap-1 p-1 bg-zinc-100/80 dark:bg-zinc-950/60 rounded-xl border border-zinc-200/50 dark:border-primary-500/10 mb-5 relative z-10 shrink-0 select-none shadow-inner">
             <button
                     type="button"
                     onclick={() => {
@@ -105,7 +107,7 @@
                 }}
                     class="py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer
                 {activeTab === 'login'
-                    ? 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-purple-500/25 text-purple-650 dark:text-purple-400 shadow-sm'
+                    ? 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-primary-500/25 text-primary-600 dark:text-primary-400 shadow-sm'
                     : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300'}"
             >
                 <LogIn size={13} />
@@ -119,7 +121,7 @@
                 }}
                     class="py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer
                 {activeTab === 'register'
-                    ? 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-purple-500/25 text-purple-650 dark:text-purple-400 shadow-sm'
+                    ? 'bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-primary-500/25 text-primary-600 dark:text-primary-400 shadow-sm'
                     : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300'}"
             >
                 <UserPlus size={13} />
@@ -151,7 +153,7 @@
                             bind:value={username}
                             placeholder="e.g., username"
                             required
-                            class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-purple-500/15 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/40 text-xs"
+                            class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-primary-500/15 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/40 text-xs"
                     />
                 </div>
             </div>
@@ -170,7 +172,7 @@
                             bind:value={password}
                             placeholder="••••••••"
                             required
-                            class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-purple-500/15 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/40 text-xs"
+                            class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-primary-500/15 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/40 text-xs"
                     />
                 </div>
             </div>
@@ -179,7 +181,7 @@
             <button
                     type="submit"
                     disabled={loading}
-                    class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white disabled:bg-zinc-100 disabled:text-zinc-400 dark:disabled:bg-zinc-950 dark:disabled:text-zinc-650 rounded-xl font-bold transition-all active:translate-y-[0.5px] text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+                    class="w-full py-2.5 bg-primary-600 hover:bg-primary-500 text-white disabled:bg-zinc-100 disabled:text-zinc-400 dark:disabled:bg-zinc-950 dark:disabled:text-zinc-650 rounded-xl font-bold transition-all active:translate-y-[0.5px] text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-primary-glow"
             >
                 {#if loading}
                     <span>Connecting...</span>
@@ -199,7 +201,7 @@
                 <div class="w-full border-t border-zinc-200 dark:border-zinc-800"></div>
             </div>
             <div class="relative flex justify-center text-xs">
-                <span class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-0.5 rounded-full border border-zinc-200/60 dark:border-purple-500/20 text-[9px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-wider transition-colors duration-300">Or Quick Play</span>
+                <span class="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-0.5 rounded-full border border-zinc-200/60 dark:border-primary-500/20 text-[9px] font-bold text-zinc-400 dark:text-zinc-550 uppercase tracking-wider transition-colors duration-300">Or Quick Play</span>
             </div>
         </div>
 
@@ -208,7 +210,7 @@
                 type="button"
                 onclick={handleAnonymous}
                 disabled={loading}
-                class="w-full py-2 border border-zinc-250 dark:border-emerald-500/25 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/15 hover:border-emerald-250 dark:hover:border-emerald-500/40 text-zinc-700 dark:text-emerald-400 rounded-xl font-bold transition-all active:translate-y-[0.5px] text-xs flex items-center justify-center gap-1.5 relative z-10 cursor-pointer hover:shadow-[0_0_12px_rgba(34,197,94,0.15)]"
+                class="w-full py-2 border border-zinc-200 dark:border-zinc-800 hover:bg-secondary-50/50 dark:hover:bg-secondary-950/15 hover:border-secondary-250 dark:hover:border-secondary-500/40 text-zinc-700 dark:text-secondary-400 rounded-xl font-bold transition-all active:translate-y-[0.5px] text-xs flex items-center justify-center gap-1.5 relative z-10 cursor-pointer hover:shadow-secondary-glow"
         >
             <Play size={13} />
             <span>Play in Demo Mode (No Log In)</span>

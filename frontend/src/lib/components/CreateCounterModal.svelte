@@ -6,7 +6,7 @@
 
   interface Props {
     show?: boolean;
-    onclose: () => void;
+    onclose: (result?: any) => void;
   }
 
   let { show = false, onclose }: Props = $props();
@@ -58,7 +58,7 @@
       await counterStore.createCounter(
           name.trim(),
           decimals,
-          unit.trim(),
+          unit,
           finalIncrements,
       );
       onclose();

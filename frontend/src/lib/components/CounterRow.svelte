@@ -1,11 +1,15 @@
 <script lang="ts">
   import { type Counter, counterStore } from '$lib/store.svelte';
   import {
-    Clock, Edit3, Hash, Keyboard, Minus, MoreVertical, Plus, Redo2, Settings, Trash2, Undo2, X,
+    Clock, EllipsisVertical, Redo2, Settings, Trash2, Undo2, Keyboard, PenLine
   } from 'lucide-svelte';
+  import { dialog } from '$lib/dialog.svelte';
   import HistoryModal from './HistoryModal.svelte';
   import IconButton from './IconButton.svelte';
-  import Modal from './Modal.svelte';
+  import SetExactValueModal from './SetExactValueModal.svelte';
+  import CustomAdjustModal from './CustomAdjustModal.svelte';
+  import DeleteConfirmModal from './DeleteConfirmModal.svelte';
+  import SettingsModal from './SettingsModal.svelte';
 
   interface Props {
     counter: Counter;
@@ -17,48 +21,8 @@
   let showActionMenu = $state(false);
   let menuContainer = $state<HTMLDivElement | null>(null);
 
-  // Modal states
-  let showSetValModal = $state(false);
-  let showCustomAdjustModal = $state(false);
-  let showDeleteConfirm = $state(false);
-  let showCardHistory = $state(false);
-  let showSettingsModal = $state(false);
-
-  // Form states
-  let newValueInput = $state('');
-  let customAdjustInput = $state('1');
-  let isCustomPositive = $state(true);
-
-  // Settings edit states
-  let editName = $state('');
-  let editUnit = $state('');
-  let editDecimals = $state(0);
-  let editIncrements = $state<number[]>([]);
-  let settingsError = $state<string | null>(null);
-
   // Animations
   let valPopAnimation = $state(false);
-
-  // Sync local inputs
-  $effect(() => {
-    if (showSetValModal) {
-      newValueInput = counter.value.toString();
-    }
-  });
-
-  $effect(() => {
-    if (showSettingsModal) {
-      editName = counter.name;
-      editUnit = counter.unit;
-      editDecimals = counter.decimals;
-      editIncrements = [ ...counter.increments ];
-      settingsError = null;
-    }
-  });
-
-  let localHistory = $derived(() => {
-    return counterStore.history.filter((h) => h.counterId === counter.id).slice(0, 3);
-  });
 
   function formatVal(val: number) {
     return val.toFixed(counter.decimals);
@@ -80,78 +44,27 @@
     await counterStore.updateCounterValue(counter.id, finalVal, desc, false, 'Quick Adjust');
   }
 
-  async function handleSetExactValue() {
-    const parsed = parseFloat(newValueInput);
-    if (isNaN(parsed)) return;
-
-    await counterStore.updateCounterValue(
-        counter.id,
-        parsed,
-        `Set value directly to ${ parsed } ${ counter.unit }`.trim(),
-        false,
-        'Direct Set',
-    );
-    showSetValModal = false;
+  function openSettings() {
+    dialog.open(SettingsModal, { counter });
   }
 
-  async function handleCustomAdjust() {
-    const parsed = parseFloat(customAdjustInput);
-    if (isNaN(parsed)) return;
-
-    const delta = isCustomPositive ? parsed : -parsed;
-    const finalVal = counter.value + delta;
-    const desc = delta >= 0
-        ? `Adjusted custom by +${ parsed } ${ counter.unit }`.trim()
-        : `Adjusted custom by -${ parsed } ${ counter.unit }`.trim();
-
-    triggerValuePop();
-    await counterStore.updateCounterValue(counter.id, finalVal, desc, false, 'Custom Adjust');
-    showCustomAdjustModal = false;
+  function openDeleteConfirm() {
+    dialog.open(DeleteConfirmModal, { counter });
   }
 
-  async function handleDelete() {
-    await counterStore.deleteCounter(counter.id);
-    showDeleteConfirm = false;
-  }
-
-  function addEditIncrement() {
-    if (editIncrements.length >= 3) return;
-    editIncrements = [ ...editIncrements, 1 ];
-  }
-
-  function removeEditIncrement(index: number) {
-    if (editIncrements.length <= 1) return;
-    editIncrements = editIncrements.filter((_, i) => i !== index);
-  }
-
-  async function handleSaveSettings(e: SubmitEvent) {
-    e.preventDefault();
-    settingsError = null;
-
-    if (!editName.trim()) {
-      settingsError = 'Counter name is required.';
-      return;
+  async function openCustomAdjust() {
+    const applied = await dialog.open(CustomAdjustModal, { counter });
+    if (applied) {
+      triggerValuePop();
     }
+  }
 
-    const finalIncrements = editIncrements.map(v => (v !== null && typeof v === 'number' && !isNaN(v)) ? v : 1);
+  function openSetExactValue() {
+    dialog.open(SetExactValueModal, { counter });
+  }
 
-    if (finalIncrements.length < 1 || finalIncrements.length > 3) {
-      settingsError = 'You must have between 1 and 3 default increments.';
-      return;
-    }
-
-    try {
-      await counterStore.updateCounterSettings(
-          counter.id,
-          editName.trim(),
-          editDecimals,
-          editUnit.trim(),
-          finalIncrements,
-      );
-      showSettingsModal = false;
-    } catch (err: any) {
-      settingsError = err.message || 'Failed to update settings.';
-    }
+  function openHistory() {
+    dialog.open(HistoryModal, { counterId: counter.id });
   }
 </script>
 
@@ -178,7 +91,7 @@
 
         <!-- Current Value -->
         <div class="flex items-center gap-2 select-none justify-end w-auto">
-            <span class="text-[10px] text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold">Value:</span>
+            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold">Value:</span>
             <span
                     class="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-50 tabular-nums transition-all duration-100
 				{valPopAnimation ? 'scale-110 text-purple-650 dark:text-purple-400' : 'scale-100'}"
@@ -189,7 +102,7 @@
 
         <!-- Quick Adjustments -->
         <div class="flex items-center gap-1.5 w-auto flex-wrap">
-            <span class="text-[10px] text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold mr-1">Adjust:</span>
+            <span class="text-[10px] text-zinc-405 text-zinc-400 dark:text-zinc-500 md:hidden uppercase tracking-wider font-bold mr-1">Adjust:</span>
             {#each counter.increments as inc}
                 <div class="flex items-center gap-1 shrink-0">
                     <button
@@ -202,7 +115,7 @@
                     <button
                             onclick={() => handleQuickIncrement(Math.abs(inc))}
                             class="px-2.5 py-1 text-xs border border-zinc-200 dark:border-zinc-800 rounded-lg font-semibold transition-all active:translate-y-[0.5px] cursor-pointer
-						bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 hover:border-emerald-200 dark:hover:border-emerald-900/30 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-[0_0_12px_rgba(34,197,94,0.15)]"
+						bg-zinc-50 dark:bg-zinc-955 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 hover:border-emerald-200 dark:hover:border-emerald-900/30 hover:text-emerald-600 dark:hover:text-emerald-400 hover:shadow-[0_0_12px_rgba(34,197,94,0.15)]"
                     >
                         +{inc}
                     </button>
@@ -245,22 +158,21 @@
                         size="sm"
                         shape="square"
                 >
-                    <MoreVertical size={13} />
+                    <EllipsisVertical size={13} />
                 </IconButton>
 
                 {#if showActionMenu}
-                    <div class="absolute right-0 mt-1.5 w-48 rounded-xl border border-zinc-200/80 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md shadow-lg dark:shadow-[0_10px_30px_rgba(0,0,0,0.3)] z-50 overflow-hidden flex flex-col py-1">
+                    <div class="absolute right-0 mt-1.5 w-48 rounded-xl border border-zinc-200/80 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-955/95 backdrop-blur-md shadow-lg dark:shadow-[0_10px_30px_rgba(0,0,0,0.3)] z-50 overflow-hidden flex flex-col py-1">
                         <!-- Adjust Custom -->
                         <button
                                 type="button"
                                 onclick={() => {
-								customAdjustInput = '1';
-								showCustomAdjustModal = true;
+								openCustomAdjust();
 								showActionMenu = false;
 							}}
                                 class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
-                            <Edit3 size={13} class="text-zinc-400 dark:text-zinc-500" />
+                            <PenLine size={13} class="text-zinc-400 dark:text-zinc-500" />
                             <span>Custom Adjust</span>
                         </button>
 
@@ -268,13 +180,12 @@
                         <button
                                 type="button"
                                 onclick={() => {
-								newValueInput = counter.value.toString();
-								showSetValModal = true;
+								openSetExactValue();
 								showActionMenu = false;
 							}}
                                 class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
-                            <Keyboard size={13} class="text-zinc-400 dark:text-zinc-500" />
+                            <Keyboard size={13} class="text-zinc-400 dark:text-zinc-555" />
                             <span>Set Exact Value</span>
                         </button>
 
@@ -282,10 +193,10 @@
                         <button
                                 type="button"
                                 onclick={() => {
-								showCardHistory = true;
+								openHistory();
 								showActionMenu = false;
 							}}
-                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
+                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-955 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Clock size={13} class="text-zinc-400 dark:text-zinc-500" />
                             <span>View Activity Log</span>
@@ -295,22 +206,22 @@
                         <button
                                 type="button"
                                 onclick={() => {
-								showSettingsModal = true;
+								openSettings();
 								showActionMenu = false;
 							}}
-                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-350 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-950 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
+                                class="w-full text-left px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-355 hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-zinc-955 dark:hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer"
                         >
                             <Settings size={13} class="text-zinc-400 dark:text-zinc-500" />
                             <span>Settings</span>
                         </button>
 
-                        <div class="h-[1px] bg-zinc-100 dark:bg-zinc-800/80 my-1"></div>
+                        <div class="h-px bg-zinc-100 dark:bg-zinc-800/80 my-1"></div>
 
                         <!-- Delete -->
                         <button
                                 type="button"
                                 onclick={() => {
-								showDeleteConfirm = true;
+								openDeleteConfirm();
 								showActionMenu = false;
 							}}
                                 class="w-full text-left px-3.5 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all flex items-center gap-2 cursor-pointer"
@@ -323,333 +234,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Collapsible History Row Removed -->
 </div>
-
-<!-- INLINE MODALS REUSED FOR ROW INTERFACES -->
-<!-- SET EXACT VALUE MODAL -->
-<Modal show={showSetValModal} onclose={() => (showSetValModal = false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Keyboard size={18} class="text-zinc-600 dark:text-zinc-400" />
-            <span>Set Exact Value</span>
-        </h2>
-        <button
-                onclick={() => (showSetValModal = false)}
-                class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 cursor-pointer"
-        >
-            <X size={18} />
-        </button>
-    </div>
-
-    <div class="flex-1 overflow-y-auto space-y-4 pr-1 pb-2">
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
-            Update the counter <strong class="text-zinc-800 dark:text-zinc-300">"{counter.name}"</strong> directly.
-        </p>
-        <div>
-            <label for="newValue-{counter.id}"
-                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >New Value ({counter.unit || 'no unit'})</label
-            >
-            <input
-                    type="number"
-                    id="newValue-{counter.id}"
-                    step={counter.decimals === 0 ? '1' : (1 / Math.pow(10, counter.decimals)).toString()}
-                    bind:value={newValueInput}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors focus:ring-1 focus:ring-zinc-500/50 font-mono text-base"
-            />
-        </div>
-    </div>
-
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
-        <button
-                type="button"
-                onclick={() => (showSetValModal = false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
-        >
-            Cancel
-        </button>
-        <button
-                type="button"
-                onclick={handleSetExactValue}
-                class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)]"
-        >
-            Save Value
-        </button>
-    </div>
-</Modal>
-
-<!-- CUSTOM ADJUSTMENT MODAL -->
-<Modal show={showCustomAdjustModal} onclose={() => (showCustomAdjustModal = false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Edit3 size={18} class="text-zinc-600 dark:text-zinc-400" />
-            <span>Custom Adjustment</span>
-        </h2>
-        <button
-                onclick={() => (showCustomAdjustModal = false)}
-                class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 cursor-pointer"
-        >
-            <X size={18} />
-        </button>
-    </div>
-
-    <div class="flex-1 overflow-y-auto space-y-4 pr-1 pb-2">
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
-            Choose how much to adjust the counter <strong class="text-zinc-800 dark:text-zinc-300">"{counter.name}
-            "</strong> by.
-        </p>
-
-        <!-- Direction selection -->
-        <div class="grid grid-cols-2 gap-2">
-            <button
-                    type="button"
-                    onclick={() => (isCustomPositive = true)}
-                    class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
-				{isCustomPositive
-					? 'bg-emerald-50 dark:bg-emerald-500/20 border-emerald-300 dark:border-emerald-500 text-emerald-700 dark:text-emerald-300 shadow-sm'
-					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
-            >
-                <Plus size={14} />
-                <span>Increment (+)</span>
-            </button>
-            <button
-                    type="button"
-                    onclick={() => (isCustomPositive = false)}
-                    class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
-				{!isCustomPositive
-					? 'bg-rose-50 dark:bg-rose-500/20 border-rose-300 dark:border-rose-500 text-rose-700 dark:text-rose-300 shadow-sm'
-					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
-            >
-                <Minus size={14} />
-                <span>Decrement (-)</span>
-            </button>
-        </div>
-
-        <div>
-            <label for="customAmount-{counter.id}"
-                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-            >Adjustment Amount ({counter.unit || 'no unit'})</label
-            >
-            <input
-                    type="number"
-                    id="customAmount-{counter.id}"
-                    min="0"
-                    step={counter.decimals === 0 ? '1' : (1 / Math.pow(10, counter.decimals)).toString()}
-                    bind:value={customAdjustInput}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors focus:ring-1 focus:ring-zinc-500/50 font-mono text-base"
-            />
-        </div>
-    </div>
-
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
-        <button
-                type="button"
-                onclick={() => (showCustomAdjustModal = false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
-        >
-            Cancel
-        </button>
-        <button
-                type="button"
-                onclick={handleCustomAdjust}
-                class="px-5 py-2.5 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer
-			{isCustomPositive ? 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_4px_12px_rgba(16,185,129,0.2)] dark:shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'bg-purple-600 hover:bg-purple-500 shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)]'}"
-        >
-            Apply {isCustomPositive ? 'Addition' : 'Subtraction'}
-        </button>
-    </div>
-</Modal>
-
-<!-- DELETE CONFIRMATION MODAL -->
-<Modal show={showDeleteConfirm} onclose={() => (showDeleteConfirm = false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
-            <Trash2 size={18} />
-            <span>Delete Counter</span>
-        </h2>
-        <button
-                onclick={() => (showDeleteConfirm = false)}
-                class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 cursor-pointer"
-        >
-            <X size={18} />
-        </button>
-    </div>
-
-    <div class="flex-1 overflow-y-auto space-y-3 pr-1 pb-2">
-        <p class="text-sm text-zinc-855 dark:text-zinc-300 leading-relaxed">
-            Are you sure you want to delete <strong class="text-zinc-950 dark:text-zinc-100">"{counter.name}"</strong>?
-        </p>
-        <p class="text-xs text-zinc-400 dark:text-zinc-500 leading-normal">
-            This action cannot be undone. Its configuration and value will be permanently deleted, though the activity
-            history log will retain the deletion record.
-        </p>
-    </div>
-
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
-        <button
-                type="button"
-                onclick={() => (showDeleteConfirm = false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
-        >
-            Cancel
-        </button>
-        <button
-                type="button"
-                onclick={handleDelete}
-                class="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(239,68,68,0.2)] dark:shadow-[0_0_15px_rgba(239,68,68,0.3)]"
-        >
-            Delete Permanently
-        </button>
-    </div>
-</Modal>
-
-<!-- COUNTER SETTINGS MODAL -->
-<Modal show={showSettingsModal} onclose={() => (showSettingsModal = false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Settings size={18} class="text-zinc-600 dark:text-zinc-400" />
-            <span>Counter Settings</span>
-        </h2>
-        <button
-                onclick={() => (showSettingsModal = false)}
-                class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 cursor-pointer"
-        >
-            <X size={18} />
-        </button>
-    </div>
-
-    <form onsubmit={handleSaveSettings} class="flex-1 flex flex-col min-h-0 text-sm">
-        <div class="flex-1 overflow-y-auto space-y-4 pr-1 pb-4">
-            {#if settingsError}
-                <div class="p-3 bg-red-500/10 border border-red-500/20 text-red-650 dark:text-red-455 rounded-xl text-xs">
-                    {settingsError}
-                </div>
-            {/if}
-
-            <!-- Counter Name -->
-            <div>
-                <label for="editCounterName-{counter.id}"
-                       class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-                >Counter Name *</label
-                >
-                <input
-                        type="text"
-                        id="editCounterName-{counter.id}"
-                        bind:value={editName}
-                        placeholder="e.g. Water Intake, Daily Steps"
-                        required
-                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors focus:ring-1 focus:ring-zinc-500/50 text-base md:text-sm"
-                />
-            </div>
-
-            <!-- Unit -->
-            <div>
-                <label for="editCounterUnit-{counter.id}"
-                       class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-                >Unit (free text)</label
-                >
-                <input
-                        type="text"
-                        id="editCounterUnit-{counter.id}"
-                        bind:value={editUnit}
-                        placeholder="e.g. Liters, reps, cups, km"
-                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors focus:ring-1 focus:ring-zinc-500/50 text-base md:text-sm"
-                />
-            </div>
-
-            <!-- Decimals selection -->
-            <div>
-				<span class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
-                >Decimal Precision</span>
-                <div class="grid grid-cols-4 gap-2">
-                    {#each [ 0, 1, 2, 3 ] as d}
-                        <button
-                                type="button"
-                                onclick={() => (editDecimals = d)}
-                                class="py-2 px-1 rounded-xl border font-semibold transition-all text-center cursor-pointer text-xs
-							{editDecimals === d
-								? 'bg-purple-50 dark:bg-purple-500/20 border-purple-300 dark:border-purple-500 text-purple-700 dark:text-purple-300 shadow-[0_2px_8px_rgba(168,85,247,0.1)] dark:shadow-[0_0_10px_rgba(168,85,247,0.2)]'
-								: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-400 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
-                        >
-                            {d === 0 ? 'Int' : `.${ '0'.repeat(d) }`}
-                        </button>
-                    {/each}
-                </div>
-            </div>
-
-            <!-- Default increments -->
-            <div>
-                <div class="flex items-center justify-between mb-1.5">
-					<span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
-                    >Default Increments</span>
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500">({editIncrements.length}/3 buttons)</span>
-                </div>
-
-                <div class="space-y-2.5">
-                    {#each editIncrements as value, index}
-                        <div class="flex items-center gap-2">
-                            <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-250 dark:border-white/10 text-zinc-700 dark:text-zinc-300 font-bold shrink-0 text-xs">
-                                #{index + 1}
-                            </div>
-                            <div class="relative flex-1">
-								<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500">
-									<Hash size={14} />
-								</span>
-                                <input
-                                        type="number"
-                                        step={editDecimals === 0 ? '1' : (1 / Math.pow(10, editDecimals)).toString()}
-                                        bind:value={editIncrements[index]}
-                                        placeholder="Increment value"
-                                        class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-zinc-500 transition-colors focus:ring-1 focus:ring-zinc-500/50 text-base"
-                                />
-                            </div>
-                            {#if editIncrements.length > 1}
-                                <IconButton
-                                        tooltip="Remove increment"
-                                        type="button"
-                                        onclick={() => removeEditIncrement(index)}
-                                        variant="danger-outline"
-                                        size="md"
-                                        shape="square"
-                                >
-                                    <Trash2 size={16} />
-                                </IconButton>
-                            {/if}
-                        </div>
-                    {/each}
-
-                    {#if editIncrements.length < 3}
-                        <button
-                                type="button"
-                                onclick={addEditIncrement}
-                                class="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-dashed border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl transition-all bg-zinc-50/50 dark:bg-white/[0.01] cursor-pointer text-xs"
-                        >
-                            <Plus size={14} />
-                            <span>Add Increment Button</span>
-                        </button>
-                    {/if}
-                </div>
-            </div>
-        </div>
-
-        <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
-            <button
-                    type="button"
-                    onclick={() => (showSettingsModal = false)}
-                    class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
-            >
-                Cancel
-            </button>
-            <button
-                    type="submit"
-                    class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(168,85,247,0.2)] dark:shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_16px_rgba(168,85,247,0.3)] dark:hover:shadow-[0_0_20px_rgba(168,85,247,0.5)] active:scale-[0.98]"
-            >
-                Save Settings
-            </button>
-        </div>
-    </form>
-</Modal>
-
-<HistoryModal show={showCardHistory} onclose={() => (showCardHistory = false)} counterId={counter.id} />

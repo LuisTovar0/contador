@@ -2,20 +2,16 @@
   import CounterCard from '$lib/components/CounterCard.svelte';
   import CounterRow from '$lib/components/CounterRow.svelte';
   import CreateCounterModal from '$lib/components/CreateCounterModal.svelte';
-
+  import LogoutWarningModal from '$lib/components/LogoutWarningModal.svelte';
   import HistoryModal from '$lib/components/HistoryModal.svelte';
   import IconButton from '$lib/components/IconButton.svelte';
-  import Modal from '$lib/components/Modal.svelte';
   import { tooltip } from '$lib/components/tooltip.svelte.js';
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, counterStore, themeStore } from '$lib/store.svelte';
+  import { dialog } from '$lib/dialog.svelte';
   import {
-    AlertTriangle, CheckCircle2, History, LayoutGrid, List, LogOut, Moon, Plus, RotateCcw, Search, Sun, X,
+    CheckCircle2, History, LayoutGrid, List, LogOut, Moon, Plus, RotateCcw, Search, Sun,
   } from 'lucide-svelte';
-
-  // Modal trigger states
-  let showCreateModal = $state(false);
-  let showHistoryModal = $state(false);
 
   // Search state
   let searchQuery = $state('');
@@ -75,19 +71,23 @@
     showToast = false;
   }
 
-  let showLogoutWarningModal = $state(false);
-
-  function handleLogout() {
+  async function handleLogout() {
     if (authStore.user?.isAnonymous) {
-      showLogoutWarningModal = true;
+      const confirmed = await dialog.open(LogoutWarningModal);
+      if (confirmed) {
+        authStore.logout();
+      }
     } else {
       authStore.logout();
     }
   }
 
-  function confirmLogout() {
-    showLogoutWarningModal = false;
-    authStore.logout();
+  function openCreateModal() {
+    dialog.open(CreateCounterModal);
+  }
+
+  function openHistoryModal() {
+    dialog.open(HistoryModal);
   }
 </script>
 
@@ -130,7 +130,7 @@
             <!-- Global History Modal Button -->
             <IconButton
                     tooltip={{ text: 'Activity logs', position: 'bottom' }}
-                    onclick={() => (showHistoryModal = true)}
+                    onclick={openHistoryModal}
                     variant="outline"
                     size="lg"
                     shape="square"
@@ -163,7 +163,7 @@
                         type="text"
                         bind:value={searchQuery}
                         placeholder="Search counters..."
-                        class="w-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md border border-zinc-200/60 dark:border-purple-500/20 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-xs shadow-sm"
+                        class="w-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md border border-zinc-200/60 dark:border-purple-500/20 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/40 text-xs shadow-sm"
                 />
             </div>
 
@@ -178,8 +178,8 @@
 						}}
                             class="p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center
 						{viewMode === 'grid'
-							? 'bg-white dark:bg-zinc-900 text-purple-650 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
-							: 'text-zinc-400 hover:text-zinc-750 dark:hover:text-zinc-300'}"
+							? 'bg-white dark:bg-zinc-900 text-purple-655 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
+							: 'text-zinc-450 hover:text-zinc-750 dark:hover:text-zinc-300'}"
                             use:tooltip={"Grid view"}
                     >
                         <LayoutGrid size={14} />
@@ -191,8 +191,8 @@
 						}}
                             class="p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center
 						{viewMode === 'list'
-							? 'bg-white dark:bg-zinc-900 text-purple-650 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
-							: 'text-zinc-400 hover:text-zinc-750 dark:hover:text-zinc-300'}"
+							? 'bg-white dark:bg-zinc-900 text-purple-655 dark:text-purple-400 shadow-sm border border-zinc-200/65 dark:border-purple-500/30'
+							: 'text-zinc-450 hover:text-zinc-755 dark:hover:text-zinc-300'}"
                             use:tooltip={"List view"}
                     >
                         <List size={14} />
@@ -248,7 +248,7 @@
 <!-- Floating action button to Add Counter -->
 <div class="fixed bottom-6 right-6 z-20">
     <IconButton
-            onclick={() => (showCreateModal = true)}
+            onclick={openCreateModal}
             variant="primary"
             size="xl"
             shape="circle"
@@ -275,53 +275,3 @@
         </button>
     </div>
 {/if}
-
-<!-- GLOBAL MODALS MOUNTED -->
-<CreateCounterModal show={showCreateModal} onclose={() => (showCreateModal = false)} />
-<HistoryModal show={showHistoryModal} onclose={() => (showHistoryModal = false)} />
-
-<Modal show={showLogoutWarningModal} onclose={() => (showLogoutWarningModal = false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold flex items-center gap-2 text-red-600 dark:text-red-400">
-            <AlertTriangle size={18} class="text-red-500 shrink-0" />
-            <span>Warning: Data Loss</span>
-        </h2>
-        <IconButton
-                onclick={() => (showLogoutWarningModal = false)}
-                variant="ghost"
-                size="md"
-                shape="square"
-                aria-label="Close"
-        >
-            <X size={18} />
-        </IconButton>
-    </div>
-
-    <div class="flex-1 overflow-y-auto space-y-3.5 text-xs md:text-sm leading-relaxed text-zinc-650 dark:text-zinc-300 pr-1 pb-2">
-        <p>
-            You are currently using the application in <strong>Anonymous Mode</strong>. Your data is stored locally on
-            this device.
-        </p>
-        <p>
-            Logging out will <strong>permanently delete all of your counters and history logs</strong>. This action
-            cannot be undone.
-        </p>
-    </div>
-
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
-        <button
-                type="button"
-                onclick={() => (showLogoutWarningModal = false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-350 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
-        >
-            Cancel
-        </button>
-        <button
-                type="button"
-                onclick={confirmLogout}
-                class="px-5 py-2.5 bg-red-650 hover:bg-red-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(239,68,68,0.2)] dark:shadow-[0_0_15px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_16px_rgba(239,68,68,0.3)] dark:hover:shadow-[0_0_20px_rgba(239,68,68,0.5)] active:translate-y-[0.5px]"
-        >
-            Yes, Delete & Logout
-        </button>
-    </div>
-</Modal>

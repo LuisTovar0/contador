@@ -6,7 +6,7 @@
 
   interface Props {
     show?: boolean;
-    onclose: () => void;
+    onclose: (result?: any) => void;
     counterId?: string | null;
   }
 
@@ -81,7 +81,7 @@
             </p>
         </div>
         <IconButton
-                onclick={onclose}
+                onclick={() => onclose()}
                 variant="ghost"
                 size="md"
                 shape="square"

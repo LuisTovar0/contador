@@ -2,6 +2,7 @@
   import './layout.css';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
+  import DialogHost from '$lib/components/DialogHost.svelte';
   import { authStore } from '$lib/store.svelte';
   import { Loader2 } from 'lucide-svelte';
 
@@ -57,5 +58,8 @@
         {@render children()}
     {/if}
 </main>
+
+<DialogHost />
+
 
 

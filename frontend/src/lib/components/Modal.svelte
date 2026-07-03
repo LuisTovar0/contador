@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { fade, fly } from 'svelte/transition';
 
   interface Props {
@@ -9,21 +10,28 @@
 
   let { show = false, onclose, children }: Props = $props();
 
+  let active = $state(false);
+
+  $effect(() => {
+    if (!show) {
+      active = false;
+    }
+  });
+
+  onMount(() => {
+    active = true;
+  });
+
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape' && show) {
       onclose();
     }
   }
-
-  function portal(node: HTMLElement) {
-    document.body.appendChild(node);
-  }
 </script>
 
-{#if show}
+{#if active}
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div
-            use:portal
             class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 outline-none"
             role="dialog"
             aria-modal="true"

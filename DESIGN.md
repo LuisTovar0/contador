@@ -2,8 +2,8 @@
 name: Contador
 description: Sleek neon-cyberpunk counter app with history and undo/redo.
 colors:
-  primary: "#a855f7"
-  secondary: "#22c55e"
+  primary: "#10b981"
+  secondary: "#8a1fd6"
   tertiary: "#6366f1"
   neutral-bg: "#09090b"
   neutral-surface: "#18181b"
@@ -25,7 +25,7 @@ components:
     padding: "10px 20px"
   button-secondary:
     backgroundColor: "{colors.secondary}"
-    textColor: "{colors.neutral-bg}"
+    textColor: "{colors.neutral-ink}"
     rounded: "{rounded.md}"
     padding: "10px 20px"
 ---
@@ -37,7 +37,7 @@ components:
 A high-tech, energetic utility built for speed, visual satisfaction, and seamless responsiveness across web and mobile surfaces. The interface uses frosted glass cards (backdrop-blur), crisp glowing neon borders, and sharp typography to evoke a cyberpunk console aesthetic. It takes visual cues from Linear (precision details) and Raycast (speed and efficiency).
 
 ## Colors
-**The Cyberpunk Glow Rule.** Use deep space black (#09090b) as the background canvas. Accentuate interactive and stateful items with neon purple (#a855f7) and neon green (#22c55e).
+**The Cyberpunk Glow Rule.** Use deep space black (#09090b) as the background canvas. Accentuate interactive and stateful items with neon green (#10b981) as the primary brand color and neon purple (#8a1fd6) as the secondary accent.
 **The Tonal Hierarchy Rule.** All surfaces are semi-transparent dark gray glass cards overlaid on glowing radial backgrounds. Text colors must be high-contrast zinc-50 (#fafafa) for headings and active content, and zinc-500 (#71717a) for secondary labels.
 
 ## Typography
@@ -46,7 +46,7 @@ A high-tech, energetic utility built for speed, visual satisfaction, and seamles
 - Labels & Actions: Tighter scale ratios with strong weights (font-semibold, font-bold) for button readability.
 
 ## Elevation
-**The Glass & Glow Rule.** Instead of traditional shadows, elevation is represented by the backdrop-filter blur intensity (backdrop-blur-md to backdrop-blur-xl) combined with a thin translucent border (white at 10% opacity) and neon-tinted drop-shadow glows (drop-shadow-[0_0_15px_rgba(168,85,247,0.4)]).
+**The Glass & Glow Rule.** Instead of traditional shadows, elevation is represented by the backdrop-filter blur intensity (backdrop-blur-md to backdrop-blur-xl) combined with a thin translucent border (white at 10% opacity) and neon-tinted drop-shadow glows (drop-shadow-[0_0_15px_var(--color-primary-500)]).
 
 ## Components
 ### Counter Card
@@ -57,7 +57,7 @@ Rounded buttons with semi-transparent background, active neon border, and haptic
 
 ## Do's and Don'ts
 ### Do's
-- Use vibrant neon green (#22c55e) for incremental actions and neon purple (#a855f7) for decremental or secondary actions.
+- Use vibrant neon green (#10b981) for primary action controls, increments, and highlights, and neon purple (#8a1fd6) for decrements or secondary action accents.
 - Implement smooth transitions (150-200ms) for value changes with brief scale pops.
 - Allow instant undo/redo via a bottom snackbar notification.
 

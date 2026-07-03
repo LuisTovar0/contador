@@ -1,142 +1,135 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	import type { Snippet } from 'svelte';
+  import type { Snippet } from 'svelte';
+  import { fade } from 'svelte/transition';
 
-	interface Props {
-		text: string;
-		position?: 'top' | 'bottom' | 'left' | 'right';
-		class?: string;
-		children: Snippet;
-	}
+  interface Props {
+    text: string;
+    position?: 'top' | 'bottom' | 'left' | 'right';
+    class?: string;
+    children: Snippet;
+  }
 
-	let { text, position = 'top', class: className = '', children }: Props = $props();
+  let { text, position = 'top', class: className = '', children }: Props = $props();
 
-	let show = $state(false);
-	let triggerEl = $state<HTMLElement | null>(null);
-	let tooltipEl = $state<HTMLElement | null>(null);
+  let show = $state(false);
+  let triggerEl = $state<HTMLElement | null>(null);
+  let tooltipEl = $state<HTMLElement | null>(null);
 
-	function portal(node: HTMLElement) {
-		document.body.appendChild(node);
-		return {
-			destroy() {
-				if (node.parentNode) {
-					node.parentNode.removeChild(node);
-				}
-			}
-		};
-	}
+  function portal(node: HTMLElement) {
+    document.body.appendChild(node);
+  }
 
-	function updatePosition() {
-		if (!triggerEl || !tooltipEl) return;
-		const triggerRect = triggerEl.getBoundingClientRect();
-		const tooltipRect = tooltipEl.getBoundingClientRect();
+  function updatePosition() {
+    if (!triggerEl || !tooltipEl) return;
+    const triggerRect = triggerEl.getBoundingClientRect();
+    const tooltipRect = tooltipEl.getBoundingClientRect();
 
-		let top = 0;
-		let left = 0;
-		const offset = 8;
+    let top = 0;
+    let left = 0;
+    const offset = 8;
 
-		switch (position) {
-			case 'top':
-				top = triggerRect.top - tooltipRect.height - offset;
-				left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
-				break;
-			case 'bottom':
-				top = triggerRect.bottom + offset;
-				left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
-				break;
-			case 'left':
-				top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-				left = triggerRect.left - tooltipRect.width - offset;
-				break;
-			case 'right':
-				top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-				left = triggerRect.right + offset;
-				break;
-		}
+    switch (position) {
+      case 'top':
+        top = triggerRect.top - tooltipRect.height - offset;
+        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+        break;
+      case 'bottom':
+        top = triggerRect.bottom + offset;
+        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+        break;
+      case 'left':
+        top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
+        left = triggerRect.left - tooltipRect.width - offset;
+        break;
+      case 'right':
+        top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
+        left = triggerRect.right + offset;
+        break;
+    }
 
-		// Keep tooltip within viewport bounds
-		const padding = 8;
-		
-		// X-axis boundary check
-		if (left < padding) {
-			left = padding;
-		} else if (left + tooltipRect.width > window.innerWidth - padding) {
-			left = window.innerWidth - tooltipRect.width - padding;
-		}
+    // Keep tooltip within viewport bounds
+    const padding = 8;
 
-		// Y-axis boundary check
-		if (top < padding) {
-			if (position === 'top') {
-				top = triggerRect.bottom + offset; // Flip to bottom
-			} else {
-				top = padding;
-			}
-		} else if (top + tooltipRect.height > window.innerHeight - padding) {
-			if (position === 'bottom') {
-				top = triggerRect.top - tooltipRect.height - offset; // Flip to top
-			} else {
-				top = window.innerHeight - tooltipRect.height - padding;
-			}
-		}
+    // X-axis boundary check
+    if (left < padding) {
+      left = padding;
+    } else if (left + tooltipRect.width > window.innerWidth - padding) {
+      left = window.innerWidth - tooltipRect.width - padding;
+    }
 
-		tooltipEl.style.top = `${top + window.scrollY}px`;
-		tooltipEl.style.left = `${left + window.scrollX}px`;
-	}
+    // Y-axis boundary check
+    if (top < padding) {
+      if (position === 'top') {
+        top = triggerRect.bottom + offset; // Flip to bottom
+      } else {
+        top = padding;
+      }
+    } else if (top + tooltipRect.height > window.innerHeight - padding) {
+      if (position === 'bottom') {
+        top = triggerRect.top - tooltipRect.height - offset; // Flip to top
+      } else {
+        top = window.innerHeight - tooltipRect.height - padding;
+      }
+    }
 
-	$effect(() => {
-		if (show) {
-			updatePosition();
-			
-			// Handle position updates during window changes
-			window.addEventListener('resize', updatePosition, { passive: true });
-			window.addEventListener('scroll', updatePosition, { passive: true });
-			
-			return () => {
-				window.removeEventListener('resize', updatePosition);
-				window.removeEventListener('scroll', updatePosition);
-			};
-		}
-	});
+    tooltipEl.style.top = `${ top + window.scrollY }px`;
+    tooltipEl.style.left = `${ left + window.scrollX }px`;
+  }
 
-	function handleMouseEnter() {
-		if (typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches) return;
-		show = true;
-	}
+  $effect(() => {
+    if (show) {
+      updatePosition();
 
-	function handleMouseLeave() {
-		show = false;
-	}
+      // Handle position updates during window changes
+      window.addEventListener('resize', updatePosition, { passive: true });
+      window.addEventListener('scroll', updatePosition, { passive: true });
 
-	function handleFocusIn() {
-		if (typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches) return;
-		show = true;
-	}
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('scroll', updatePosition);
+      };
+    }
+  });
 
-	function handleFocusOut() {
-		show = false;
-	}
+  function handleMouseEnter() {
+    if (typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches) return;
+    show = true;
+  }
+
+  function handleMouseLeave() {
+    show = false;
+  }
+
+  function handleFocusIn() {
+    if (typeof window !== 'undefined' && !window.matchMedia('(hover: hover)').matches) return;
+    show = true;
+  }
+
+  function handleFocusOut() {
+    show = false;
+  }
 </script>
 
 <div
-	bind:this={triggerEl}
-	onmouseenter={handleMouseEnter}
-	onmouseleave={handleMouseLeave}
-	onfocusin={handleFocusIn}
-	onfocusout={handleFocusOut}
-	class="inline-flex {className}"
-	role="presentation"
+        bind:this={triggerEl}
+        onmouseenter={handleMouseEnter}
+        onmouseleave={handleMouseLeave}
+        onfocusin={handleFocusIn}
+        onfocusout={handleFocusOut}
+        class="inline-flex {className}"
+        role="presentation"
 >
-	{@render children()}
+    {@render children()}
 </div>
 
 {#if show && text}
-	<div
-		use:portal
-		bind:this={tooltipEl}
-		transition:fade={{ duration: 120 }}
-		role="tooltip"
-		class="absolute z-[9999] pointer-events-none px-2.5 py-1.5 rounded-lg border border-zinc-250 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-950/80 text-[11px] font-medium text-zinc-700 dark:text-zinc-200 shadow-md dark:shadow-[0_0_15px_rgba(168,85,247,0.15)] backdrop-blur-md whitespace-nowrap tracking-wide select-none"
-	>
-		{text}
-	</div>
+    <div
+            use:portal
+            bind:this={tooltipEl}
+            transition:fade={{ duration: 120 }}
+            role="tooltip"
+            class="absolute z-[9999] pointer-events-none px-2.5 py-1.5 rounded-lg border border-zinc-250 dark:border-purple-500/20 bg-white/95 dark:bg-zinc-950/80 text-[11px] font-medium text-zinc-700 dark:text-zinc-200 shadow-md dark:shadow-[0_0_15px_rgba(168,85,247,0.15)] backdrop-blur-md whitespace-nowrap tracking-wide select-none"
+    >
+        {text}
+    </div>
 {/if}

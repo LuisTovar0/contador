@@ -1,6 +1,7 @@
 <script lang="ts">
   import { type Counter, counterStore } from '$lib/store.svelte';
-  import { Clock, Edit3, Gauge, Hash, Keyboard, Minus, Plus, Redo2, Settings, Trash2, Undo2, X } from 'lucide-svelte';
+  import { Clock, Edit3, Hash, Keyboard, Minus, Plus, Redo2, Settings, Trash2, Undo2, X } from 'lucide-svelte';
+  import HistoryModal from './HistoryModal.svelte';
   import IconButton from './IconButton.svelte';
   import Modal from './Modal.svelte';
 
@@ -16,7 +17,6 @@
   let showDeleteConfirm = $state(false);
   let showCardHistory = $state(false);
   let showSettingsModal = $state(false);
-  let showStatsModal = $state(false);
 
   // Form states
   let newValueInput = $state('');
@@ -58,33 +58,6 @@
   let fullHistory = $derived(() => {
     return counterStore.history.filter((h) => h.counterId === counter.id);
   });
-
-  // Compute stats
-  let stats = $derived.by(() => {
-    const historyList = counterStore.history.filter((h) => h.counterId === counter.id);
-    const currentVal = counter.value;
-    const decimals = counter.decimals;
-
-    const values = [currentVal, ...historyList.map((h) => h.newValue)];
-    const minVal = values.length > 0 ? Math.min(...values) : 0;
-    const maxVal = values.length > 0 ? Math.max(...values) : 0;
-
-    const increments = historyList.filter((h) => h.type === 'increment' && h.delta !== null);
-    const avgInc = increments.length > 0
-      ? parseFloat((increments.reduce((acc, h) => acc + (h.delta ?? 0), 0) / increments.length).toFixed(decimals))
-      : 0;
-
-    return {
-      totalUpdates: historyList.length,
-      minVal,
-      maxVal,
-      avgInc
-    };
-  });
-
-  function formatDate(timestamp: number) {
-    return new Date(timestamp).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-  }
 
   function formatVal(val: number) {
     return val.toFixed(counter.decimals);
@@ -150,11 +123,6 @@
     editIncrements = editIncrements.filter((_, i) => i !== index);
   }
 
-  function updateEditIncrementValue(index: number, val: string) {
-    const parsed = parseFloat(val);
-    editIncrements[index] = isNaN(parsed) ? 0 : parsed;
-  }
-
   async function handleSaveSettings(e: SubmitEvent) {
     e.preventDefault();
     settingsError = null;
@@ -164,7 +132,9 @@
       return;
     }
 
-    if (editIncrements.length < 1 || editIncrements.length > 3) {
+    const finalIncrements = editIncrements.map(v => (v !== null && typeof v === 'number' && !isNaN(v)) ? v : 1);
+
+    if (finalIncrements.length < 1 || finalIncrements.length > 3) {
       settingsError = 'You must have between 1 and 3 default increments.';
       return;
     }
@@ -175,7 +145,7 @@
           editName.trim(),
           editDecimals,
           editUnit.trim(),
-          editIncrements,
+          finalIncrements,
       );
       showSettingsModal = false;
     } catch (err: any) {
@@ -305,14 +275,14 @@
         </div>
     </div>
 
-    <!-- Inline Card History Toggle -->
+    <!-- Card History Button -->
     <div class="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/60 pt-2.5 mt-1">
         <button
-                onclick={() => (showCardHistory = !showCardHistory)}
-                class="text-[10px] font-semibold text-zinc-450 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-350 transition-colors flex items-center gap-1 cursor-pointer"
+                onclick={() => (showCardHistory = true)}
+                class="text-[10px] font-semibold text-zinc-450 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-355 transition-colors flex items-center gap-1 cursor-pointer"
         >
             <Clock size={10} />
-            <span>{showCardHistory ? 'Hide Recent Activity' : 'Show Recent Activity'}</span>
+            <span>View Activity Log</span>
         </button>
         {#if localHistory().length > 0}
 			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-600">
@@ -320,32 +290,6 @@
 			</span>
         {/if}
     </div>
-
-    {#if showCardHistory}
-        <div class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
-            {#if localHistory().length === 0}
-                <p class="text-[10px] text-zinc-400 dark:text-zinc-600">No changes logged yet.</p>
-            {:else}
-                {#each localHistory() as entry (entry.id)}
-                    <div class="text-[10px] leading-relaxed border-b border-zinc-100 dark:border-zinc-800/40 pb-1.5 last:border-0 last:pb-0 flex items-start justify-between gap-2">
-                        <div class="flex flex-col min-w-0">
-							<span class="text-zinc-600 dark:text-zinc-400 truncate pr-1">
-								{entry.description}
-							</span>
-                            {#if entry.method}
-								<span class="text-[8px] text-zinc-500 dark:text-zinc-550 font-bold uppercase tracking-wider mt-0.5">
-									via {entry.method}
-								</span>
-                            {/if}
-                        </div>
-                        <span class="text-zinc-400 dark:text-zinc-600 font-mono shrink-0">
-							{formatTime(entry.timestamp)}
-						</span>
-                    </div>
-                {/each}
-            {/if}
-        </div>
-    {/if}
 </div>
 
 <!-- SET EXACT VALUE MODAL -->
@@ -620,8 +564,7 @@
                                 <input
                                         type="number"
                                         step={editDecimals === 0 ? '1' : (1 / Math.pow(10, editDecimals)).toString()}
-                                        value={value}
-                                        oninput={(e) => updateEditIncrementValue(index, e.currentTarget.value)}
+                                        bind:value={editIncrements[index]}
                                         placeholder="Increment value"
                                         class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-purple-500 transition-colors focus:ring-1 focus:ring-purple-500/50 text-base"
                                 />
@@ -672,3 +615,5 @@
         </div>
     </form>
 </Modal>
+
+<HistoryModal show={showCardHistory} onclose={() => (showCardHistory = false)} counterId={counter.id} />

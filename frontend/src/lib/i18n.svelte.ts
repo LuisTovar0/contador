@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from './constants';
 export type Locale = 'pt-PT' | 'en-GB';
 
 export const translations: Record<Locale, Record<string, string>> = {
@@ -14,8 +15,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     'auth.password': 'Palavra-passe',
     'auth.usernamePlaceholder': 'ex: utilizador',
     'auth.connecting': 'A ligar...',
-    'auth.orQuickPlay': 'Ou Demonstração Rápida',
-    'auth.playDemo': 'Jogar em Modo de Demonstração (Sem Iniciar Sessão)',
+    'auth.playDemo': 'Usar sem conta (armazenamento local)',
+    'auth.guest': 'Convidado',
     'auth.error.fieldsRequired': 'Por favor, preencha todos os campos.',
     'auth.error.invalidUsername': 'O nome de utilizador deve começar com uma letra ou sublinhado, conter apenas letras, números ou sublinhados, e ter pelo menos 2 caracteres.',
     'auth.error.authFailed': 'Falha na autenticação.',
@@ -162,8 +163,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     'auth.password': 'Password',
     'auth.usernamePlaceholder': 'e.g., username',
     'auth.connecting': 'Connecting...',
-    'auth.orQuickPlay': 'Or Quick Play',
-    'auth.playDemo': 'Play in Demo Mode (No Log In)',
+    'auth.playDemo': 'Use without an account (local storage)',
+    'auth.guest': 'Guest',
     'auth.error.fieldsRequired': 'Please fill out all fields.',
     'auth.error.invalidUsername': 'Username must start with a letter or underscore, contain only letters, numbers, or underscores, and be at least 2 characters long.',
     'auth.error.authFailed': 'Authentication failed.',
@@ -304,7 +305,7 @@ class I18nStore {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('contador_locale');
+      const saved = localStorage.getItem(STORAGE_KEYS.LOCALE);
       if (saved === 'pt-PT' || saved === 'en-GB') {
         this.locale = saved as Locale;
       } else {
@@ -332,7 +333,7 @@ class I18nStore {
   setLocale(newLocale: Locale) {
     this.locale = newLocale;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('contador_locale', newLocale);
+      localStorage.setItem(STORAGE_KEYS.LOCALE, newLocale);
     }
   }
 

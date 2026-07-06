@@ -4,6 +4,7 @@ import {
 import { collection, doc, limit, onSnapshot, orderBy, query, writeBatch } from 'firebase/firestore';
 import { auth, db, isFirebaseConfigured } from './firebase';
 import { t } from './i18n.svelte';
+import { STORAGE_KEYS, APP_LIMITS, AUTH_CONFIG } from './constants';
 
 export interface Counter {
   id: string;
@@ -70,11 +71,11 @@ class AuthStore {
             };
           } else {
             // Fallback to local session if one exists (e.g. for local demo mode)
-            const stored = localStorage.getItem('contador_user');
+            const stored = localStorage.getItem(STORAGE_KEYS.USER);
             if (stored) {
               try {
                 const parsed = JSON.parse(stored);
-                if (parsed && (parsed.isAnonymous || parsed.uid?.startsWith('local-'))) {
+                if (parsed && (parsed.isAnonymous || parsed.uid?.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX))) {
                   this.user = parsed;
                   this.loading = false;
                   return;
@@ -98,7 +99,7 @@ class AuthStore {
 
   private loadLocalSession() {
     try {
-      const stored = localStorage.getItem('contador_user');
+      const stored = localStorage.getItem(STORAGE_KEYS.USER);
       if (stored) {
         this.user = JSON.parse(stored);
       } else {
@@ -114,9 +115,9 @@ class AuthStore {
   private saveLocalSession(session: UserSession | null) {
     this.user = session;
     if (session) {
-      localStorage.setItem('contador_user', JSON.stringify(session));
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(session));
     } else {
-      localStorage.removeItem('contador_user');
+      localStorage.removeItem(STORAGE_KEYS.USER);
     }
   }
 
@@ -125,7 +126,7 @@ class AuthStore {
     this.loading = true;
     if (isFirebaseConfigured && auth) {
       try {
-        const email = `${ username }@contador.local`;
+        const email = `${ username }@${ AUTH_CONFIG.MOCK_USER_DOMAIN }`;
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err: any) {
         this.error = err.message || 'Login failed.';
@@ -135,10 +136,10 @@ class AuthStore {
       }
     } else {
       // Local storage mock login
-      const localUsers = JSON.parse(localStorage.getItem('contador_mock_users') || '{}');
+      const localUsers = JSON.parse(localStorage.getItem(STORAGE_KEYS.MOCK_USERS) || '{}');
       if (localUsers[username] && localUsers[username] === password) {
         this.saveLocalSession({
-          uid: `local-${ btoa(username) }`,
+          uid: `${ AUTH_CONFIG.LOCAL_USER_PREFIX }${ btoa(username) }`,
           username: username,
           isAnonymous: false,
         });
@@ -156,7 +157,7 @@ class AuthStore {
     this.loading = true;
     if (isFirebaseConfigured && auth) {
       try {
-        const email = `${ username }@contador.local`;
+        const email = `${ username }@${ AUTH_CONFIG.MOCK_USER_DOMAIN }`;
         await createUserWithEmailAndPassword(auth, email, password);
       } catch (err: any) {
         this.error = err.message || 'Registration failed.';
@@ -166,16 +167,16 @@ class AuthStore {
       }
     } else {
       // Local storage mock signup
-      const localUsers = JSON.parse(localStorage.getItem('contador_mock_users') || '{}');
+      const localUsers = JSON.parse(localStorage.getItem(STORAGE_KEYS.MOCK_USERS) || '{}');
       if (localUsers[username]) {
         this.error = 'User already exists in local session.';
         this.loading = false;
         throw new Error(this.error);
       }
       localUsers[username] = password;
-      localStorage.setItem('contador_mock_users', JSON.stringify(localUsers));
+      localStorage.setItem(STORAGE_KEYS.MOCK_USERS, JSON.stringify(localUsers));
       this.saveLocalSession({
-        uid: `local-${ btoa(username) }`,
+        uid: `${ AUTH_CONFIG.LOCAL_USER_PREFIX }${ btoa(username) }`,
         username: username,
         isAnonymous: false,
       });
@@ -188,7 +189,7 @@ class AuthStore {
     this.loading = true;
     try {
       this.saveLocalSession({
-        uid: `local-anon-${ Math.random().toString(36).substring(2, 11) }`,
+        uid: `${ AUTH_CONFIG.LOCAL_ANON_PREFIX }${ Math.random().toString(36).substring(2, 11) }`,
         username: null,
         isAnonymous: true,
       });
@@ -210,8 +211,8 @@ class AuthStore {
       const currentUser = this.user;
       if (currentUser && currentUser.isAnonymous) {
         if (typeof window !== 'undefined') {
-          localStorage.removeItem(`contador_counters_${ currentUser.uid }`);
-          localStorage.removeItem(`contador_history_${ currentUser.uid }`);
+          localStorage.removeItem(STORAGE_KEYS.counters(currentUser.uid));
+          localStorage.removeItem(STORAGE_KEYS.history(currentUser.uid));
         }
       }
       this.saveLocalSession(null);
@@ -256,7 +257,7 @@ class CounterStore {
 
           if (currentUser) {
             this.loading = true;
-            const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith('local-'));
+            const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX));
             if (useFirebase) {
               const countersRef = collection(db!, 'users', currentUser.uid, 'counters');
               const qCounters = query(countersRef, orderBy('createdAt', 'desc'));
@@ -272,7 +273,7 @@ class CounterStore {
               });
 
               const historyRef = collection(db!, 'users', currentUser.uid, 'history');
-              const qHistory = query(historyRef, orderBy('timestamp', 'desc'), limit(50));
+              const qHistory = query(historyRef, orderBy('timestamp', 'desc'), limit(APP_LIMITS.FIRESTORE_HISTORY_LIMIT));
               this.unsubscribeHistory = onSnapshot(qHistory, (snapshot) => {
                 this.history = snapshot.docs.map((doc) => ({
                   id: doc.id,
@@ -315,10 +316,10 @@ class CounterStore {
 
   private loadLocalData(uid: string) {
     try {
-      const storedCounters = localStorage.getItem(`contador_counters_${ uid }`);
+      const storedCounters = localStorage.getItem(STORAGE_KEYS.counters(uid));
       this.counters = storedCounters ? JSON.parse(storedCounters) : [];
 
-      const storedHistory = localStorage.getItem(`contador_history_${ uid }`);
+      const storedHistory = localStorage.getItem(STORAGE_KEYS.history(uid));
       this.history = storedHistory ? JSON.parse(storedHistory) : [];
     } catch (e) {
       console.error('Failed to load local data:', e);
@@ -330,8 +331,8 @@ class CounterStore {
     if (!currentUser) return;
 
     try {
-      localStorage.setItem(`contador_counters_${ currentUser.uid }`, JSON.stringify(this.counters));
-      localStorage.setItem(`contador_history_${ currentUser.uid }`, JSON.stringify(this.history));
+      localStorage.setItem(STORAGE_KEYS.counters(currentUser.uid), JSON.stringify(this.counters));
+      localStorage.setItem(STORAGE_KEYS.history(currentUser.uid), JSON.stringify(this.history));
     } catch (e) {
       console.error('Failed to save local data:', e);
     }
@@ -342,7 +343,7 @@ class CounterStore {
     if (!currentUser) throw new Error('Not authenticated.');
 
     // Validation
-    if (increments.length < 1 || increments.length > 3) {
+    if (increments.length < APP_LIMITS.MIN_INCREMENT_BUTTONS || increments.length > APP_LIMITS.MAX_INCREMENT_BUTTONS) {
       throw new Error('Default increments must be between 1 and 3 items.');
     }
 
@@ -373,7 +374,7 @@ class CounterStore {
       method: 'Creation',
     };
 
-    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith('local-'));
+    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX));
     if (useFirebase) {
       const batch = writeBatch(db!);
       const counterDocRef = doc(db!, 'users', currentUser.uid, 'counters', counterId);
@@ -426,7 +427,7 @@ class CounterStore {
       method: method || (description.toLowerCase().includes('set') ? 'Direct Set' : (delta > 0 ? 'Increment' : 'Decrement')),
     };
 
-    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith('local-'));
+    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX));
     if (useFirebase) {
       const batch = writeBatch(db!);
       const counterDocRef = doc(db!, 'users', currentUser.uid, 'counters', counterId);
@@ -462,7 +463,7 @@ class CounterStore {
     const counter = this.counters.find((c) => c.id === counterId);
     if (!counter) throw new Error('Counter not found.');
 
-    if (increments.length < 1 || increments.length > 3) {
+    if (increments.length < APP_LIMITS.MIN_INCREMENT_BUTTONS || increments.length > APP_LIMITS.MAX_INCREMENT_BUTTONS) {
       throw new Error('Default increments must be between 1 and 3 items.');
     }
 
@@ -490,7 +491,7 @@ class CounterStore {
       method: 'Settings Update',
     };
 
-    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith('local-'));
+    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX));
     if (useFirebase) {
       const batch = writeBatch(db!);
       const counterDocRef = doc(db!, 'users', currentUser.uid, 'counters', counterId);
@@ -528,7 +529,7 @@ class CounterStore {
       method: 'Deletion',
     };
 
-    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith('local-'));
+    const useFirebase = !!(isFirebaseConfigured && db && !currentUser.isAnonymous && !currentUser.uid.startsWith(AUTH_CONFIG.LOCAL_USER_PREFIX));
     if (useFirebase) {
       const batch = writeBatch(db!);
       const counterDocRef = doc(db!, 'users', currentUser.uid, 'counters', counterId);
@@ -664,7 +665,7 @@ class ThemeStore {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('contador_theme');
+      const saved = localStorage.getItem(STORAGE_KEYS.THEME);
       if (saved === 'light' || saved === 'dark') {
         this.current = saved as 'light' | 'dark';
       } else {
@@ -678,7 +679,7 @@ class ThemeStore {
   toggle() {
     this.current = this.current === 'dark' ? 'light' : 'dark';
     if (typeof window !== 'undefined') {
-      localStorage.setItem('contador_theme', this.current);
+      localStorage.setItem(STORAGE_KEYS.THEME, this.current);
     }
     this.applyTheme();
   }

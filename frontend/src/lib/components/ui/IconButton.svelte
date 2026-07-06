@@ -17,7 +17,7 @@
   let {
     tooltip,
     variant = 'outline',
-    size = 'md',
+    size = 'lg',
     shape = 'square',
     class: className = '',
     children,

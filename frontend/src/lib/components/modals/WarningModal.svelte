@@ -30,7 +30,7 @@
 
 <Modal {show} onclose={() => onclose(false)}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold flex items-center gap-2 text-red-650 dark:text-red-400">
+        <h2 class="text-lg font-bold flex items-center gap-2 text-red-600 dark:text-red-400">
             {#if Icon}
                 <Icon size={18} class="shrink-0" />
             {/if}
@@ -40,7 +40,6 @@
                 onclick={() => onclose(false)}
                 variant="ghost"
                 size="md"
-                shape="square"
                 aria-label={t('modals.close')}
         >
             <X size={18} />
@@ -55,7 +54,7 @@
         <button
                 type="button"
                 onclick={() => onclose(false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-650 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
+                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
         >
             {cancelText}
         </button>

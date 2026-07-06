@@ -3,7 +3,7 @@
   import { ArrowDownRight, ArrowUpRight, Calendar, Clock, Edit3, PlusCircle, Search, Trash2, X } from 'lucide-svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
-  import { t } from '$lib';
+  import { t, APP_LIMITS } from '$lib';
 
 
   interface Props {
@@ -15,12 +15,12 @@
   let { show = false, onclose, counterId = null }: Props = $props();
 
   let searchQuery = $state('');
-  let visibleCount = $state(10); // Initially show 10 items
+  let visibleCount = $state(APP_LIMITS.HISTORY_MODAL_PAGE_SIZE); // Initially show pagination size items
 
   // Reset pagination and query when shown or when target changes
   $effect(() => {
     if (show) {
-      visibleCount = 10;
+      visibleCount = APP_LIMITS.HISTORY_MODAL_PAGE_SIZE;
       searchQuery = '';
     }
   });
@@ -56,7 +56,7 @@
   });
 
   function loadMore() {
-    visibleCount += 10;
+    visibleCount += APP_LIMITS.HISTORY_MODAL_PAGE_SIZE;
   }
 
   function formatTime(timestamp: number) {
@@ -98,7 +98,6 @@
                 onclick={() => onclose()}
                 variant="ghost"
                 size="md"
-                shape="square"
                 aria-label="Close"
         >
             <X size={20} />
@@ -115,7 +114,7 @@
                     type="text"
                     bind:value={searchQuery}
                     placeholder={counterId ? t('history.searchPlaceholderCounter') : t('history.searchPlaceholder')}
-                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
     </div>
@@ -123,11 +122,11 @@
     <!-- History Items -->
     <div class="flex-1 overflow-y-auto pt-4 space-y-4 pr-1">
         {#if visibleHistory().length === 0}
-            <div class="flex flex-col items-center justify-center h-48 text-center text-zinc-405 dark:text-zinc-500">
+            <div class="flex flex-col items-center justify-center h-48 text-center text-zinc-500 dark:text-zinc-500">
                 <Calendar size={32} class="text-zinc-300 dark:text-zinc-600 mb-2" />
                 <p class="text-sm">{t('history.noHistory')}</p>
                 {#if searchQuery}
-                    <p class="text-xs text-zinc-500 dark:text-zinc-650 mt-1">{t('history.clearSearch')}</p>
+                    <p class="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{t('history.clearSearch')}</p>
                 {/if}
             </div>
         {:else}
@@ -170,11 +169,11 @@
 									<span>{formatTime(entry.timestamp)}</span>
 								</span>
                             </div>
-                            <p class="text-xs text-zinc-650 dark:text-zinc-400 leading-normal">
+                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-normal">
                                 {entry.description}
                             </p>
                             {#if entry.prevValue !== null && entry.type !== 'delete'}
-                                <div class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-450 dark:text-zinc-500">
+                                <div class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-500 dark:text-zinc-500">
                                     <span>{entry.prevValue}</span>
                                     <span>→</span>
                                     <span class="text-zinc-800 dark:text-zinc-300 font-bold">{entry.newValue}</span>

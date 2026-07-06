@@ -3,7 +3,7 @@
   import { Hash, Plus, Trash2, X } from 'lucide-svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import Modal from './Modal.svelte';
-  import { t } from '$lib';
+  import { t, APP_LIMITS } from '$lib';
 
 
   interface Props {
@@ -31,12 +31,12 @@
   });
 
   function addIncrement() {
-    if (increments.length >= 3) return;
+    if (increments.length >= APP_LIMITS.MAX_INCREMENT_BUTTONS) return;
     increments = [ ...increments, 1 ];
   }
 
   function removeIncrement(index: number) {
-    if (increments.length <= 1) return;
+    if (increments.length <= APP_LIMITS.MIN_INCREMENT_BUTTONS) return;
     increments = increments.filter((_, i) => i !== index);
   }
 
@@ -51,7 +51,7 @@
 
     const finalIncrements = increments.map(v => (v !== null && typeof v === 'number' && !isNaN(v)) ? v : 1);
 
-    if (finalIncrements.length < 1 || finalIncrements.length > 3) {
+    if (finalIncrements.length < APP_LIMITS.MIN_INCREMENT_BUTTONS || finalIncrements.length > APP_LIMITS.MAX_INCREMENT_BUTTONS) {
       errorMessage = t('settings.error.incrementsCount');
       return;
     }
@@ -72,14 +72,13 @@
 
 <Modal {show} {onclose}>
     <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-150">
+        <h2 class="text-xl font-bold flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
             <span>{t('create.title')}</span>
         </h2>
         <IconButton
                 onclick={onclose}
                 variant="ghost"
                 size="md"
-                shape="square"
                 aria-label={t('modals.close')}
         >
             <X size={20} />
@@ -96,7 +95,7 @@
         <!-- Counter Name -->
         <div>
             <label for="counterName"
-                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
             >{t('settings.nameLabel')}</label
             >
             <input
@@ -105,14 +104,14 @@
                     bind:value={name}
                     placeholder={t('settings.namePlaceholder')}
                     required
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
         <!-- Unit -->
         <div>
             <label for="counterUnit"
-                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+                   class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
             >{t('settings.unitLabel')}</label
             >
             <input
@@ -120,23 +119,23 @@
                     id="counterUnit"
                     bind:value={unit}
                     placeholder={t('settings.unitPlaceholder')}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-405 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
 
         <!-- Decimals selection -->
         <div>
-			<span class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+			<span class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
             >{t('settings.decimalPrecision')}</span>
             <div class="grid grid-cols-4 gap-2">
-                {#each [ 0, 1, 2, 3 ] as d}
+                {#each Array.from({ length: APP_LIMITS.MAX_DECIMAL_PRECISION + 1 }, (_, i) => i) as d}
                     <button
                             type="button"
                             onclick={() => (decimals = d)}
                             class="py-2 px-1 rounded-xl border font-semibold transition-all text-center cursor-pointer text-xs
 						{decimals === d
 							? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
-							: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-450 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
+							: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
                     >
                         {decimals === 0 ? t('settings.integer') : `.${ '0'.repeat(d) }`}
                     </button>
@@ -147,15 +146,15 @@
         <!-- Default increments -->
         <div>
             <div class="flex items-center justify-between mb-1.5">
-				<span class="text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider"
+				<span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
                 >{t('settings.defaultIncrements')}</span>
-                <span class="text-xs text-zinc-400 dark:text-zinc-500">({increments.length}/3 buttons)</span>
+                <span class="text-xs text-zinc-400 dark:text-zinc-500">({increments.length}/{APP_LIMITS.MAX_INCREMENT_BUTTONS} buttons)</span>
             </div>
 
             <div class="space-y-2.5">
                 {#each increments as value, index}
                     <div class="flex items-center gap-2">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-250 dark:border-white/10 text-zinc-650 dark:text-zinc-400 font-bold shrink-0 text-xs">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400 font-bold shrink-0 text-xs">
                             #{index + 1}
                         </div>
                         <div class="relative flex-1">
@@ -167,7 +166,7 @@
                                     step={decimals === 0 ? '1' : (1 / Math.pow(10, decimals)).toString()}
                                     bind:value={increments[index]}
                                     placeholder="Increment value"
-                                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-650 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base"
+                                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-8 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base"
                             />
                         </div>
                         {#if increments.length > 1}
@@ -177,7 +176,6 @@
                                     onclick={() => removeIncrement(index)}
                                     variant="danger-outline"
                                     size="md"
-                                    shape="square"
                             >
                                 <Trash2 size={16} />
                             </IconButton>
@@ -185,7 +183,7 @@
                     </div>
                 {/each}
 
-                {#if increments.length < 3}
+                {#if increments.length < APP_LIMITS.MAX_INCREMENT_BUTTONS}
                     <button
                             type="button"
                             onclick={addIncrement}
@@ -202,7 +200,7 @@
             <button
                     type="button"
                     onclick={onclose}
-                    class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-650 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
+                    class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
             >
                 {t('modals.cancel')}
             </button>

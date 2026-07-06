@@ -2,7 +2,7 @@
   import { type Counter, counterStore } from '$lib/store.svelte';
   import { Clock, Redo2, Settings, Trash2, Undo2 } from 'lucide-svelte';
   import { dialog } from '$lib/components/modals/dialog.svelte.js';
-  import { t } from '$lib';
+  import { t, APP_LIMITS, TIMING } from '$lib';
 
   import HistoryModal from '$lib/components/modals/HistoryModal.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
@@ -22,7 +22,7 @@
 
   // Filter history specifically for this counter
   let localHistory = $derived(() => {
-    return counterStore.history.filter((h) => h.counterId === counter.id).slice(0, 5);
+    return counterStore.history.filter((h) => h.counterId === counter.id).slice(0, APP_LIMITS.CARD_HISTORY_LIMIT);
   });
 
   function formatVal(val: number) {
@@ -33,7 +33,7 @@
     valPopAnimation = true;
     setTimeout(() => {
       valPopAnimation = false;
-    }, 180);
+    }, TIMING.VALUE_POP_ANIMATION_MS);
   }
 
   async function handleQuickIncrement(inc: number) {
@@ -95,9 +95,7 @@
                     tooltip={t('counters.undoTooltip')}
                     onclick={() => counterStore.undoCounter(counter.id)}
                     disabled={!counterStore.canUndoCounter(counter.id)}
-                    variant="outline"
                     size="sm"
-                    shape="square"
             >
                 <Undo2 size={13} />
             </IconButton>
@@ -107,9 +105,7 @@
                     tooltip={t('counters.redoTooltip')}
                     onclick={() => counterStore.redoCounter(counter.id)}
                     disabled={!counterStore.canRedoCounter(counter.id)}
-                    variant="outline"
                     size="sm"
-                    shape="square"
             >
                 <Redo2 size={13} />
             </IconButton>
@@ -118,9 +114,7 @@
             <IconButton
                     tooltip={t('counters.settingsTooltip')}
                     onclick={openSettings}
-                    variant="outline"
                     size="sm"
-                    shape="square"
             >
                 <Settings size={13} />
             </IconButton>
@@ -131,7 +125,6 @@
                     onclick={openDeleteConfirm}
                     variant="danger-outline"
                     size="sm"
-                    shape="square"
             >
                 <Trash2 size={13} />
             </IconButton>
@@ -141,7 +134,7 @@
     <!-- Value display -->
     <div class="flex flex-col items-center justify-center py-3 select-none">
         <div
-                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-550 tabular-nums transition-all duration-100 drop-shadow-[0_0_8px_rgba(16,185,129,0.08)] dark:drop-shadow-[0_0_15px_rgba(16,185,129,0.2)]
+                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-100 tabular-nums transition-all duration-100 drop-shadow-[0_0_8px_rgba(16,185,129,0.08)] dark:drop-shadow-[0_0_15px_rgba(16,185,129,0.2)]
 			{valPopAnimation ? 'scale-105 text-primary-600 dark:text-primary-400' : 'scale-100'}"
         >
             <span>{formatVal(counter.value)}</span>
@@ -177,7 +170,7 @@
             <!-- Custom adjustments button -->
             <button
                     onclick={openCustomAdjust}
-                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-955 text-zinc-650 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
+                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
                 <span>{t('counters.customAdjust')}</span>
             </button>
@@ -185,7 +178,7 @@
             <!-- Set value -->
             <button
                     onclick={openSetExactValue}
-                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-955 text-zinc-650 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
+                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
                 <span>{t('counters.setValue')}</span>
             </button>
@@ -196,13 +189,13 @@
     <div class="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/60 pt-2.5 mt-1">
         <button
                 onclick={openHistory}
-                class="text-[10px] font-semibold text-zinc-450 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-355 transition-colors flex items-center gap-1 cursor-pointer"
+                class="text-[10px] font-semibold text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors flex items-center gap-1 cursor-pointer"
         >
             <Clock size={10} />
             <span>{t('counters.viewActivityLog')}</span>
         </button>
         {#if localHistory().length > 0}
-			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-655">
+			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-500">
 				{t('counters.last')} {formatTime(localHistory()[0].timestamp)}
 			</span>
         {/if}

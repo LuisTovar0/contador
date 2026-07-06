@@ -107,6 +107,11 @@ body {
 
 .dark body {
     background-color: var(--color-zinc-950);
+    /* Subtle neon green and purple gradients in the background to prevent a flat black feel */
+    background-image: 
+        radial-gradient(circle at 35% 20%, oklch(0.58 0.16 265 / 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 75% 70%, oklch(0.62 0.15 145 / 0.05) 0%, transparent 50%);
+    background-attachment: fixed;
     color: var(--color-zinc-50);
 }
 
@@ -146,6 +151,14 @@ body {
 
 .animate-blob-2 {
     animation: blob-float-2 20s infinite ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-blob-1,
+    .animate-blob-2 {
+        animation: none;
+        transform: none;
+    }
 }
 
 /* Hide standard spin buttons on numeric fields */

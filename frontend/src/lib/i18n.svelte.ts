@@ -8,9 +8,8 @@ export const translations: Record<Locale, Record<string, string>> = {
     'auth.description': 'Inicie sessão, registe-se ou entre em modo de demonstração para começar a contar.',
     'auth.tagline': 'Para contar coisas',
     'auth.firebaseNotConnected': 'O Firebase não está ligado. Será iniciada uma sessão local.',
-    'auth.signIn': 'Iniciar Sessão',
-    'auth.register': 'Registar',
-    'auth.createAccount': 'Criar Conta',
+    'auth.signIn': 'Iniciar sessão',
+    'auth.createAccount': 'Criar conta',
     'auth.username': 'Nome de utilizador',
     'auth.password': 'Palavra-passe',
     'auth.usernamePlaceholder': 'ex: utilizador',
@@ -34,7 +33,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'counters.noCounters': 'Nenhum contador registado.',
     'counters.createCounter': 'Criar novo contador',
     'counters.activityLogs': 'Histórico de atividade',
-    'counters.signOut': 'Terminar Sessão',
+    'counters.signOut': 'Terminar sessão',
     'counters.undo': 'Desfazer',
     'counters.redo': 'Refazer',
     'counters.adjust': 'Ajustar:',
@@ -45,11 +44,11 @@ export const translations: Record<Locale, Record<string, string>> = {
     'counters.deleteTooltip': 'Eliminar contador',
     'counters.customAdjust': 'Incr/decremento personalizado',
     'counters.setValue': 'Definir valor',
-    'counters.viewActivityLog': 'Ver Registo de Atividade',
+    'counters.viewActivityLog': 'Ver registo de atividade',
     'counters.last': 'Último:',
-    'counters.moreActions': 'Mais Ações',
-    'counters.setExactValue': 'Definir Valor Exato',
-    'counters.deleteCounter': 'Eliminar Contador',
+    'counters.moreActions': 'Mais ações',
+    'counters.setExactValue': 'Definir valor exato',
+    'counters.deleteCounter': 'Eliminar contador',
     'counters.initializing': 'A iniciar interface...',
     'counters.redirecting': 'A redirecionar...',
 
@@ -69,10 +68,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     'settings.unitPlaceholder': 'ex: L, €, km',
     'settings.decimalPrecision': 'Casas decimais',
     'settings.integer': 'Int',
-    'settings.quickIncrements': 'Incrementos Rápidos',
-    'settings.defaultIncrements': 'Incrementos Padrão',
-    'settings.addIncrement': 'Adicionar Botão de Incremento',
-    'settings.saveSettings': 'Guardar Definições',
+    'settings.quickIncrements': 'Incrementos rápidos',
+    'settings.defaultIncrements': 'Incrementos padrão',
+    'settings.addIncrement': 'Novo incr/decremento padrão',
+    'settings.saveSettings': 'Guardar definições',
     'settings.error.nameRequired': 'O nome do contador é obrigatório.',
     'settings.error.incrementsCount': 'Deve ter entre 1 e 3 incrementos padrão.',
     'settings.error.failedUpdate': 'Falha ao atualizar as definições.',
@@ -84,7 +83,7 @@ export const translations: Record<Locale, Record<string, string>> = {
 
     // Delete Modal
     'delete.title': 'Eliminar Contador',
-    'delete.confirmText': 'Eliminar Permanentemente',
+    'delete.confirmText': 'Eliminar permanentemente',
     'delete.body': 'Tem a certeza de que deseja eliminar "{name}"?',
     'delete.disclaimer': 'Esta ação não pode ser desfeita. A configuração do contador e o seu valor serão eliminados permanentemente, embora o registo de histórico de atividade mantenha o registo de eliminação.',
 
@@ -95,7 +94,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'logout.body2': 'Terminar a sessão irá <strong>eliminar permanentemente todos os seus contadores e registos de histórico</strong>. Esta ação não pode ser desfeita.',
 
     // Custom Adjust Modal
-    'custom.title': 'Ajuste Personalizado',
+    'custom.title': 'Ajuste personalizado',
     'custom.body': 'Escolha o quanto deseja ajustar o contador "{name}".',
     'custom.increment': 'Incrementar (+)',
     'custom.decrement': 'Decrementar (-)',
@@ -104,10 +103,10 @@ export const translations: Record<Locale, Record<string, string>> = {
     'custom.applySubtraction': 'Aplicar Subtração',
 
     // Set Exact Value Modal
-    'exact.title': 'Definir Valor Exato',
+    'exact.title': 'Definir valor exato',
     'exact.body': 'Atualize o valor do contador "{name}" diretamente.',
-    'exact.valueLabel': 'Novo Valor ({unit})',
-    'exact.saveValue': 'Guardar Valor',
+    'exact.valueLabel': 'Novo valor ({unit})',
+    'exact.saveValue': 'Guardar valor',
 
     // History Modal
     'history.title': 'Histórico de Atividade',
@@ -118,15 +117,15 @@ export const translations: Record<Locale, Record<string, string>> = {
     'history.searchPlaceholderCounter': 'Procurar alterações...',
     'history.noHistory': 'Nenhum histórico de atividade registado.',
     'history.clearSearch': 'Tente limpar a sua consulta de pesquisa.',
-    'history.loadMore': 'Carregar Mais',
+    'history.loadMore': 'Carregar mais',
 
     // Methods and dynamic logs
     'history.method.creation': 'Criação',
     'history.method.settingsUpdate': 'Definições',
     'history.method.deletion': 'Eliminação',
-    'history.method.quickAdjust': 'Ajuste Rápido',
-    'history.method.customAdjust': 'Ajuste Personaliz.',
-    'history.method.directSet': 'Definição Direta',
+    'history.method.quickAdjust': 'Ajuste rápido',
+    'history.method.customAdjust': 'Ajuste personaliz.',
+    'history.method.directSet': 'Definição direta',
     'history.method.undo': 'Desfazer',
     'history.method.redo': 'Refazer',
 
@@ -155,10 +154,9 @@ export const translations: Record<Locale, Record<string, string>> = {
     // Auth Page
     'auth.title': 'Contador • Sign In',
     'auth.description': 'Sign in, sign up, or launch a demo session to start tracking with Contador.',
-    'auth.tagline': 'To count things',
+    'auth.tagline': 'For counting things',
     'auth.firebaseNotConnected': 'Firebase is not connected yet. You will be logged into a local session.',
     'auth.signIn': 'Sign In',
-    'auth.register': 'Register',
     'auth.createAccount': 'Create Account',
     'auth.username': 'Username',
     'auth.password': 'Password',

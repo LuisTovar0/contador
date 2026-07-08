@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { i18n, t } from '$lib';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, themeStore } from '$lib/store.svelte';
   import { CircleAlert, Lock, LogIn, Moon, Play, Sun, User, UserPlus } from 'lucide-svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { i18n, t } from '$lib';
 
 
   let activeTab = $state<'login' | 'register'>('login');
@@ -62,7 +62,7 @@
     <meta name="description" content={t('auth.description')} />
 </svelte:head>
 
-<div class="flex-1 flex items-center justify-center py-12 px-4 w-full relative z-10">
+<div class="flex-1 flex items-center justify-center px-4 w-full relative z-10">
     <!-- Language & Theme Switcher top bar -->
     <div class="absolute top-0 right-0 flex items-center gap-1.5 z-20">
         <!-- Language Switcher button -->
@@ -89,19 +89,19 @@
         </IconButton>
     </div>
 
-    <div class="w-full max-w-md glass-surface border border-card-border border-t-card-border-t border-l-card-border-l p-6 rounded-2xl shadow-card relative overflow-hidden transition-all duration-300 ring-1 ring-card-ring">
+    <div class="flex flex-col gap-6 w-full max-w-md glass-surface border border-card-border border-t-card-border-t border-l-card-border-l p-6 rounded-2xl shadow-card relative overflow-hidden transition-all duration-300 ring-1 ring-card-ring">
         <!-- Specular reflection glass highlight -->
         <div class="absolute inset-0 bg-linear-to-br from-glass-specular via-transparent to-transparent pointer-events-none"></div>
 
         <!-- Logo & Tagline -->
-        <div class="text-center mb-6 mt-2 relative z-10 select-none">
+        <div class="text-center relative z-10 select-none">
             <h1 class="text-2xl font-black tracking-tight text-primary-brand">Contador</h1>
             <p class="text-xs text-muted mt-1 font-medium">{t('auth.tagline')}</p>
         </div>
 
         <!-- Firebase status alert -->
         {#if !isFirebaseConfigured}
-            <div class="mb-5 p-3 rounded-xl border border-default bg-surface-muted text-[11px] text-alt flex items-start gap-2 relative z-10">
+            <div class="p-3 rounded-xl border border-default bg-surface-muted text-[11px] text-alt flex items-start gap-2 relative z-10">
                 <CircleAlert size={14} class="text-muted shrink-0 mt-0.5" />
                 <div class="leading-relaxed">
                     <span>{t('auth.firebaseNotConnected')}</span>
@@ -110,7 +110,7 @@
         {/if}
 
         <!-- Tabs -->
-        <div class="grid grid-cols-2 gap-1 p-1 bg-surface-muted rounded-xl border border-tab-shell mb-5 relative z-10 shrink-0 select-none shadow-inner">
+        <div class="grid grid-cols-2 gap-1 p-1 bg-surface-muted rounded-xl border border-tab-shell relative z-10 shrink-0 select-none shadow-inner">
             <button
                     type="button"
                     onclick={() => {
@@ -137,13 +137,13 @@
                     : 'text-zinc-500 hover:text-secondary'}"
             >
                 <UserPlus size={13} />
-                <span>{t('auth.register')}</span>
+                <span>{t('auth.createAccount')}</span>
             </button>
         </div>
 
         <!-- Error Message -->
         {#if error}
-            <div class="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-error rounded-xl text-xs flex items-center gap-2 relative z-10">
+            <div class="p-3 bg-red-500/10 border border-red-500/20 text-error rounded-xl text-xs flex items-center gap-2 relative z-10">
                 <CircleAlert size={14} class="shrink-0 text-error" />
                 <span>{error}</span>
             </div>
@@ -154,7 +154,7 @@
             <!-- Username Input -->
             <div>
                 <label for="username"
-                        class="block text-[10px] font-semibold text-label-text uppercase tracking-wider mb-1.5">{t('auth.username')}</label>
+                       class="block text-[10px] font-semibold text-label-text uppercase tracking-wider mb-1.5">{t('auth.username')}</label>
                 <div class="relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">
                         <User size={14} />
@@ -173,7 +173,7 @@
             <!-- Password Input -->
             <div>
                 <label for="password"
-                        class="block text-[10px] font-semibold text-label-text uppercase tracking-wider mb-1.5">{t('auth.password')}</label>
+                       class="block text-[10px] font-semibold text-label-text uppercase tracking-wider mb-1.5">{t('auth.password')}</label>
                 <div class="relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">
                         <Lock size={14} />
@@ -207,9 +207,6 @@
             </button>
         </form>
 
-        <!-- Divider -->
-        <div class="my-6"> </div>
-
         <!-- Anonymous Play -->
         <button
                 type="button"
@@ -220,5 +217,14 @@
             <Play size={13} />
             <span>{t('auth.playDemo')}</span>
         </button>
+
+        <p class="text-center text-[10px] text-muted">
+            <a href="https://luistovar.dev" target="_blank" rel="noopener noreferrer"
+               class="underline underline-offset-2">Luís Tovar</a>
+            ·
+            <a href="https://github.com/LuisTovar0/contador" target="_blank" rel="noopener noreferrer"
+               class="text-primary-500 hover:text-primary-brand underline underline-offset-2 transition-colors">Source
+                code</a>
+        </p>
     </div>
 </div>

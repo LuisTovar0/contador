@@ -1,69 +1,9 @@
 @import 'tailwindcss';
+@import './variables.css';
 
 @plugin '@tailwindcss/typography';
 
-@theme {
-    --font-sans: 'Space Grotesk', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    /* Custom high-fidelity green brand palette (Primary) */
-    --color-primary-50: oklch(0.97 0.015 145);
-    --color-primary-100: oklch(0.93 0.03 145);
-    --color-primary-200: oklch(0.86 0.06 145);
-    --color-primary-300: oklch(0.78 0.10 145);
-    --color-primary-400: oklch(0.70 0.13 145);
-    --color-primary-500: oklch(0.62 0.15 145);
-    --color-primary-600: oklch(0.53 0.14 145);
-    --color-primary-700: oklch(0.44 0.12 145);
-    --color-primary-800: oklch(0.35 0.10 145);
-    --color-primary-900: oklch(0.27 0.07 145);
-    --color-primary-950: oklch(0.18 0.04 145);
-
-    /* Custom sophisticated violet brand palette (Secondary / Accent) */
-    --color-secondary-50: oklch(0.96 0.02 265);
-    --color-secondary-100: oklch(0.92 0.04 265);
-    --color-secondary-200: oklch(0.85 0.07 265);
-    --color-secondary-300: oklch(0.76 0.11 265);
-    --color-secondary-400: oklch(0.67 0.14 265);
-    --color-secondary-500: oklch(0.58 0.16 265);
-    --color-secondary-600: oklch(0.49 0.15 265);
-    --color-secondary-700: oklch(0.41 0.13 265);
-    --color-secondary-800: oklch(0.33 0.10 265);
-    --color-secondary-900: oklch(0.25 0.07 265);
-    --color-secondary-950: oklch(0.16 0.04 265);
-
-    /* Custom red palette for validation, errors, and destructive actions */
-    --color-red-50: oklch(0.97 0.015 18);
-    --color-red-100: oklch(0.93 0.03 18);
-    --color-red-200: oklch(0.86 0.06 18);
-    --color-red-300: oklch(0.78 0.09 18);
-    --color-red-400: oklch(0.68 0.13 18);
-    --color-red-500: oklch(0.58 0.16 18);
-    --color-red-600: oklch(0.48 0.15 18);
-    --color-red-700: oklch(0.40 0.13 18);
-    --color-red-800: oklch(0.32 0.10 18);
-    --color-red-900: oklch(0.24 0.07 18);
-    --color-red-950: oklch(0.15 0.04 18);
-
-    /* Custom green-tinted zinc neutrals to eliminate the "AI default" gray monoculture */
-    --color-zinc-50: oklch(0.98 0.003 145);
-    --color-zinc-100: oklch(0.96 0.004 145);
-    --color-zinc-200: oklch(0.90 0.006 145);
-    --color-zinc-300: oklch(0.81 0.007 145);
-    --color-zinc-400: oklch(0.68 0.007 145);
-    --color-zinc-500: oklch(0.52 0.007 145);
-    --color-zinc-600: oklch(0.40 0.007 145);
-    --color-zinc-700: oklch(0.31 0.006 145);
-    --color-zinc-800: oklch(0.21 0.005 145);
-    --color-zinc-900: oklch(0.13 0.004 145);
-    --color-zinc-950: oklch(0.08 0.002 145);
-
-    /* Glow definitions */
-    --shadow-primary-glow: 0 0 20px oklch(0.62 0.15 145 / 0.25);
-    --shadow-secondary-glow: 0 0 20px oklch(0.58 0.16 265 / 0.25);
-}
-
-@custom-variant dark (&:where(.dark, .dark *));
+@import './utilities.css';
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
@@ -94,8 +34,8 @@
 
 /* Global Reset/Base Styles */
 body {
-    background-color: var(--color-zinc-100);
-    color: var(--color-zinc-950);
+    background-color: var(--theme-bg-body);
+    color: var(--theme-text-body);
     font-family: var(--font-sans), sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -106,13 +46,11 @@ body {
 }
 
 .dark body {
-    background-color: var(--color-zinc-950);
     /* Subtle neon green and purple gradients in the background to prevent a flat black feel */
     background-image: 
-        radial-gradient(circle at 35% 20%, oklch(0.58 0.16 265 / 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 35% 20%, oklch(0.58 0.16 300 / 0.06) 0%, transparent 50%),
         radial-gradient(circle at 75% 70%, oklch(0.62 0.15 145 / 0.05) 0%, transparent 50%);
     background-attachment: fixed;
-    color: var(--color-zinc-50);
 }
 
 /* Dotted Grid Background pattern */
@@ -171,6 +109,11 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
     -moz-appearance: textfield;
 }
+/* Keep textual content fully opaque even when controls use subtle surfaces. */
+::placeholder {
+    opacity: 1;
+}
+
 
 /* Typography Polish Rules */
 h1, h2, h3, h4, h5, h6 {
@@ -182,5 +125,4 @@ h1, h2, h3, h4, h5, h6 {
 .font-mono {
     font-variant-numeric: tabular-nums;
 }
-
 

@@ -35,12 +35,12 @@
   );
 
   const variantClasses = {
-    outline: 'border border-zinc-200/55 dark:border-white/5 border-t-white/80 border-l-white/80 dark:border-t-white/10 dark:border-l-white/10 bg-white/20 dark:bg-white/5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 hover:dark:text-zinc-200 hover:bg-white/40 dark:hover:bg-white/10 hover:border-zinc-300 dark:hover:border-white/15 backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.55)] dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]',
-    ghost: 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 hover:dark:text-zinc-200 hover:bg-white/10 dark:hover:bg-white/5',
-    danger: 'bg-transparent text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 dark:hover:bg-red-500/15 backdrop-blur-sm',
-    'danger-outline': 'border border-red-200/50 dark:border-red-950/20 border-t-white/30 border-l-white/30 dark:border-t-white/5 dark:border-l-white/5 bg-red-500/5 dark:bg-red-950/5 text-zinc-500 dark:text-red-400 hover:text-red-600 hover:dark:text-red-400 hover:border-red-300 dark:hover:border-red-900/40 hover:bg-red-500/10 dark:hover:bg-red-950/15 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]',
-    primary: 'border border-primary-400/30 dark:border-primary-500/20 border-t-primary-300/50 border-l-primary-300/50 dark:border-t-primary-400/30 dark:border-l-primary-400/30 bg-primary-500/30 dark:bg-primary-500/20 text-primary-700 dark:text-primary-400 hover:bg-primary-500/40 dark:hover:bg-primary-500/30 hover:border-primary-400/45 dark:hover:border-primary-500/35 hover:shadow-primary-glow dark:hover:shadow-primary-glow backdrop-blur-md',
-    secondary: 'border border-secondary-400/30 dark:border-secondary-500/20 border-t-secondary-300/50 border-l-secondary-300/50 dark:border-t-secondary-400/30 dark:border-l-secondary-400/30 bg-secondary-500/30 dark:bg-secondary-500/20 text-secondary-700 dark:text-secondary-400 hover:bg-secondary-500/40 dark:hover:bg-secondary-500/30 hover:border-secondary-400/45 dark:hover:border-secondary-500/35 hover:shadow-secondary-glow dark:hover:shadow-secondary-glow backdrop-blur-md',
+    outline: 'border border-btn-outline-border border-t-btn-outline-border-t border-l-btn-outline-border-l bg-btn-outline-bg text-btn-outline-text hover:text-btn-outline-hover-text hover:bg-btn-outline-hover-bg hover:border-btn-outline-hover-border backdrop-blur-md shadow-btn-outline-inset',
+    ghost: 'bg-transparent text-text-alt hover:text-icon-ghost-hover hover:bg-icon-ghost-hover',
+    danger: 'bg-transparent text-text-alt hover:text-icon-danger-hover hover:bg-icon-danger-hover backdrop-blur-sm',
+    'danger-outline': 'border border-btn-danger-border border-t-btn-danger-border-t border-l-btn-danger-border-l bg-btn-danger-bg text-btn-danger-text hover:text-btn-danger-hover-text hover:border-btn-danger-hover-border hover:bg-btn-danger-hover-bg backdrop-blur-sm shadow-btn-danger-inset',
+    primary: 'border border-primary-icon border-t-primary-icon border-l-primary-icon bg-primary-icon text-primary-brand-subtle hover:bg-primary-icon-hover hover:border-primary-icon-hover hover:shadow-primary-glow backdrop-blur-md',
+    secondary: 'border border-secondary-icon border-t-secondary-icon border-l-secondary-icon bg-secondary-icon text-secondary-brand hover:bg-secondary-icon-hover hover:border-secondary-icon-hover hover:shadow-secondary-glow backdrop-blur-md',
   };
 
   let activeClass = $derived(variant === 'primary' || variant === 'secondary' ? 'active:scale-95' : 'active:translate-y-[1px]');
@@ -48,7 +48,7 @@
 
   // Combine computed classes
   let buttonClass = $derived(
-      `group relative overflow-hidden flex items-center justify-center shrink-0 transition-all cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50 dark:focus-visible:ring-primary-500/30 disabled:opacity-30 disabled:pointer-events-none ${ sizeClass } ${ variantClass } ${ activeClass } ${ className }`,
+      `group relative overflow-hidden flex items-center justify-center shrink-0 transition-all cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-focus-primary disabled:pointer-events-none ${ sizeClass } ${ variantClass } ${ activeClass } ${ className }`,
   );
 </script>
 
@@ -59,7 +59,7 @@
             {...restProps}
     >
         {#if variant !== 'ghost'}
-            <span class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/50 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all duration-300 pointer-events-none rounded-[inherit]"></span>
+            <span class="absolute inset-0 bg-gradient-to-br from-glass-specular via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/50 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all duration-300 pointer-events-none rounded-[inherit]"></span>
         {/if}
         <span class="relative z-10 flex items-center justify-center">
             {@render children?.()}
@@ -71,10 +71,11 @@
             {...restProps}
     >
         {#if variant !== 'ghost'}
-            <span class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/50 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all duration-300 pointer-events-none rounded-[inherit]"></span>
+            <span class="absolute inset-0 bg-gradient-to-br from-glass-specular via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/50 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all duration-300 pointer-events-none rounded-[inherit]"></span>
         {/if}
         <span class="relative z-10 flex items-center justify-center">
             {@render children?.()}
         </span>
     </button>
 {/if}
+

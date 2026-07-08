@@ -65,9 +65,9 @@
     <!-- Plus Sign Glass Shape -->
     <div class="sp-sign sp-sign-plus">
       <!-- Glass body clipped to plus shape -->
-      <div class="absolute inset-0 bg-white/25 dark:bg-black/35 backdrop-blur-xl" style="clip-path: url(#sp-plus-clip);">
+      <div class="absolute inset-0 bg-plus-glass backdrop-blur-xl" style="clip-path: url(#sp-plus-clip);">
         <!-- Specular reflection glass highlight -->
-        <div class="absolute inset-0 bg-linear-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none"></div>
+        <div class="absolute inset-0 bg-linear-to-br from-glass-specular via-transparent to-transparent pointer-events-none"></div>
       </div>
 
       <!-- Plus sign rim stroke (SVG overlay to trace the clipped border with exactly 1px borders) -->
@@ -97,9 +97,9 @@
     </div>
 
     <!-- Minus Sign Glass Shape -->
-    <div class="sp-sign sp-sign-minus bg-white/25 dark:bg-black/35 backdrop-blur-xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 rounded-lg shadow-[0_12px_40px_0_rgba(9,9,11,0.06),inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_16px_48px_0_rgba(0,0,0,0.37),inset_0_1px_0_0_rgba(255,255,255,0.12)] ring-1 ring-black/5 dark:ring-white/5">
+    <div class="sp-sign sp-sign-minus glass-surface border border-card-border border-t-card-border-t border-l-card-border-l rounded-lg shadow-card ring-1 ring-card-ring">
       <!-- Specular reflection glass highlight -->
-      <div class="absolute inset-0 bg-linear-to-br from-white/35 dark:from-white/12 via-transparent to-transparent pointer-events-none rounded-lg"></div>
+      <div class="absolute inset-0 bg-linear-to-br from-glass-specular via-transparent to-transparent pointer-events-none rounded-lg"></div>
     </div>
   </div>
 

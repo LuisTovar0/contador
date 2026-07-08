@@ -63,8 +63,8 @@
 
 @utility glass-surface {
     background-color: var(--card-bg);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(1px) contrast(1.03) brightness(1.02);
+    -webkit-backdrop-filter: blur(1px) contrast(1.03) brightness(1.02);
 }
 
 @utility bg-surface-elevated {

@@ -55,7 +55,7 @@
     --zinc-950: oklch(0.08 0.002 145);
 
     /* Glow definitions */
-    --shadow-primary-glow: 0 0 20px oklch(0.62 0.15 145 / 0.25);
+    --shadow-primary-glow: 0 0 20px var(--primary-glass-25);
     --shadow-secondary-glow: 0 0 20px oklch(0.58 0.16 300 / 0.25);
 
     /* Semantic Theme Tokens (Light Mode Defaults) */
@@ -63,68 +63,79 @@
     --theme-text-body: var(--zinc-950);
     --theme-bg-app: rgba(250, 250, 250, 0.2); /* bg-zinc-50/20 */
 
+    --glass-border-tint: rgba(9, 9, 11, 0.08);
+    --white-glass-highlight: rgba(255, 255, 255, 0.60);
+    --white-glass-subtle: rgba(255, 255, 255, 0.10);
+    --primary-glass-10: oklch(0.62 0.15 145 / 0.10);
+    --primary-glass-20: oklch(0.62 0.15 145 / 0.20);
+    --primary-glass-25: oklch(0.62 0.15 145 / 0.25);
+    --primary-glass-30: oklch(0.62 0.15 145 / 0.30);
+    --primary-glass-40: oklch(0.62 0.15 145 / 0.40);
+    --secondary-glass-30: oklch(0.58 0.16 300 / 0.30);
+    --secondary-glass-40: oklch(0.58 0.16 300 / 0.40);
+
     /* Glass Cards */
     --card-bg: rgba(255, 255, 255, 0.25);
-    --card-border: rgba(9, 9, 11, 0.08); /* border-zinc-200/55 */
+    --card-border: var(--glass-border-tint);
     --card-border-t: rgba(255, 255, 255, 0.8);
-    --card-border-l: rgba(255, 255, 255, 0.8);
-    --card-shadow: 0 8px 32px 0 rgba(9, 9, 11, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
-    --card-hover-shadow: 0 12px 40px rgba(9, 9, 11, 0.08), 0 0 25px oklch(0.62 0.15 145 / 0.08);
+    --card-border-l: var(--card-border-t);
+    --card-shadow: 0 8px 32px 0 rgba(9, 9, 11, 0.06), inset 0 1px 0 0 var(--white-glass-highlight);
+    --card-hover-shadow: 0 12px 40px var(--glass-border-tint), 0 0 25px oklch(0.62 0.15 145 / 0.08);
     --card-hover-border: oklch(0.78 0.10 145 / 0.8);
     --card-ring: rgba(9, 9, 11, 0.05);
 
     /* Modals */
     --modal-bg: rgba(255, 255, 255, 0.55);
-    --modal-border: rgba(9, 9, 11, 0.08);
-    --modal-border-t: rgba(255, 255, 255, 0.8);
-    --modal-border-l: rgba(255, 255, 255, 0.8);
-    --modal-shadow: 0 20px 50px rgba(9, 9, 11, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    --modal-border: var(--glass-border-tint);
+    --modal-border-t: var(--card-border-t);
+    --modal-border-l: var(--modal-border-t);
+    --modal-shadow: 0 20px 50px rgba(9, 9, 11, 0.12), inset 0 1px 0 var(--white-glass-highlight);
 
     /* Toast HUD */
     --hud-bg: rgba(255, 255, 255, 0.3);
-    --hud-border: rgba(9, 9, 11, 0.08);
-    --hud-border-t: rgba(255, 255, 255, 0.8);
-    --hud-border-l: rgba(255, 255, 255, 0.8);
-    --hud-shadow: 0 12px 40px rgba(9, 9, 11, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --hud-border: var(--glass-border-tint);
+    --hud-border-t: var(--card-border-t);
+    --hud-border-l: var(--hud-border-t);
+    --hud-shadow: 0 12px 40px var(--glass-border-tint), inset 0 1px 0 var(--white-glass-highlight);
 
     /* Buttons */
     --btn-outline-bg: rgba(255, 255, 255, 0.2);
-    --btn-outline-border: rgba(9, 9, 11, 0.08);
-    --btn-outline-border-t: rgba(255, 255, 255, 0.8);
-    --btn-outline-border-l: rgba(255, 255, 255, 0.8);
+    --btn-outline-border: var(--glass-border-tint);
+    --btn-outline-border-t: var(--card-border-t);
+    --btn-outline-border-l: var(--btn-outline-border-t);
     --btn-outline-text: var(--zinc-500);
     --btn-outline-hover-bg: rgba(255, 255, 255, 0.4);
     --btn-outline-hover-border: var(--zinc-300);
     --btn-outline-hover-text: var(--zinc-900);
-    --btn-outline-inset-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.55);
+    --btn-outline-inset-shadow: inset 0 1px 0 0 var(--modal-bg);
 
     --btn-danger-bg: rgba(239, 68, 68, 0.05);
     --btn-danger-border: rgba(239, 68, 68, 0.2);
-    --btn-danger-border-t: rgba(255, 255, 255, 0.3);
-    --btn-danger-border-l: rgba(255, 255, 255, 0.3);
+    --btn-danger-border-t: var(--hud-bg);
+    --btn-danger-border-l: var(--btn-danger-border-t);
     --btn-danger-text: var(--zinc-500);
     --btn-danger-hover-bg: rgba(239, 68, 68, 0.1);
     --btn-danger-hover-border: rgba(239, 68, 68, 0.4);
     --btn-danger-hover-text: rgba(220, 38, 38, 1);
-    --btn-danger-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    --btn-danger-inset-shadow: inset 0 1px 0 var(--card-bg);
 
     /* Inputs */
     --input-bg: var(--zinc-50);
-    --input-border: var(--zinc-200);
+    --input-border: var(--border-default);
 
     /* Typography */
     --text-primary: var(--zinc-900);
     --text-secondary: var(--zinc-700);
     --label-text: var(--zinc-500);
     --text-muted: oklch(0.46 0.007 145);  /* zinc-550 */
-    --text-alt: oklch(0.44 0.006 145);    /* zinc-555 */
+    --text-alt: var(--text-muted);
 
     /* Brand text */
     --text-primary-brand: var(--primary-600);
     --text-primary-brand-subtle: var(--primary-700);
-    --text-primary-brand-active: var(--primary-700);
+    --text-primary-brand-active: var(--text-primary-brand-subtle);
     --text-secondary-brand: var(--secondary-700);
-    --text-secondary-brand-active: var(--secondary-700);
+    --text-secondary-brand-active: var(--text-secondary-brand);
     --text-error: var(--red-600);
 
     /* Inputs */
@@ -133,48 +144,48 @@
     /* Surface states */
     --bg-surface-elevated: white;
     --bg-surface-muted: var(--zinc-50);
-    --bg-surface-hover: var(--zinc-50);
+    --bg-surface-hover: var(--bg-surface-muted);
     --bg-badge: var(--zinc-100);
-    --bg-disabled: var(--zinc-100);
+    --bg-disabled: var(--bg-badge);
     --text-disabled: var(--zinc-400);
 
     /* Brand subtle backgrounds */
-    --bg-ambient-primary: oklch(0.62 0.15 145 / 0.22);
-    --bg-ambient-secondary: oklch(0.58 0.16 300 / 0.18);
+    --bg-ambient-primary: var(--border-primary-badge);
+    --bg-ambient-secondary: var(--bg-secondary-soft-hover);
     --bg-primary-soft: oklch(0.62 0.15 145 / 0.05);
     --bg-primary-soft-hover: oklch(0.62 0.15 145 / 0.15);
-    --bg-primary-badge: oklch(0.62 0.15 145 / 0.10);
+    --bg-primary-badge: var(--primary-glass-10);
     --bg-secondary-soft: oklch(0.58 0.16 300 / 0.05);
     --bg-secondary-soft-hover: oklch(0.58 0.16 300 / 0.15);
     --bg-secondary-action-hover: oklch(0.96 0.02 300 / 0.50);
     --bg-row-hover: oklch(0.98 0.003 145 / 0.50);
-    --bg-menu-divider: var(--zinc-100);
+    --bg-menu-divider: var(--bg-badge);
     --bg-danger-hover: var(--red-50);
-    --bg-subtle-hover: var(--zinc-100);
-    --bg-add-increment: oklch(0.98 0.003 145 / 0.50);
+    --bg-subtle-hover: var(--bg-badge);
+    --bg-add-increment: var(--bg-row-hover);
     --bg-history-marker: white;
-    --bg-plus-glass: rgba(255, 255, 255, 0.25);
+    --bg-plus-glass: var(--btn-outline-bg);
 
     /* Subtle borders */
     --border-default: var(--zinc-200);
-    --border-muted: var(--zinc-200);
-    --border-primary-badge: oklch(0.62 0.15 145 / 0.20);
-    --border-control-selected: oklch(0.90 0.006 145 / 0.65);
+    --border-muted: var(--border-default);
+    --border-primary-badge: var(--primary-glass-20);
+    --border-control-selected: var(--border-tab-selected);
     --border-tab-shell: oklch(0.90 0.006 145 / 0.55);
     --border-tab-selected: oklch(0.90 0.006 145 / 0.60);
-    --border-skeleton: var(--zinc-200);
+    --border-skeleton: var(--border-default);
     --border-option-hover: var(--zinc-300);
-    --border-add-increment: oklch(0.90 0.006 145 / 0.60);
+    --border-add-increment: var(--border-tab-selected);
     --border-add-increment-hover: var(--primary-300);
     --border-secondary-action-hover: var(--secondary-300);
-    --border-history-marker: var(--zinc-200);
-    --border-menu-divider: var(--zinc-100);
+    --border-history-marker: var(--border-default);
+    --border-menu-divider: var(--divide-default);
     --border-primary-subtle: oklch(0.86 0.06 145 / 0.50);
     --border-t-primary-subtle: oklch(0.93 0.03 145 / 0.50);
-    --border-l-primary-subtle: oklch(0.93 0.03 145 / 0.50);
+    --border-l-primary-subtle: var(--border-t-primary-subtle);
     --border-secondary-subtle: oklch(0.85 0.07 300 / 0.50);
     --border-t-secondary-subtle: oklch(0.92 0.04 300 / 0.50);
-    --border-l-secondary-subtle: oklch(0.92 0.04 300 / 0.50);
+    --border-l-secondary-subtle: var(--border-t-secondary-subtle);
 
     /* Brand active/preset states */
     --bg-primary-active: var(--primary-50);
@@ -188,8 +199,8 @@
 
     /* Glass specular highlight */
     --glass-specular: rgba(255, 255, 255, 0.35);
-    --glass-card-hover-specular: rgba(255, 255, 255, 0.55);
-    --glass-shimmer: rgba(255, 255, 255, 0.30);
+    --glass-card-hover-specular: var(--modal-bg);
+    --glass-shimmer: var(--glass-specular);
 
     /* Dividers */
     --divide-default: var(--zinc-100);
@@ -201,40 +212,40 @@
     --btn-cancel-hover-bg: var(--zinc-100);
 
     /* Destructive confirm button shadow */
-    --shadow-destructive: 0 4px 12px rgba(239, 68, 68, 0.2);
+    --shadow-destructive: 0 4px 12px var(--btn-danger-border);
     --shadow-destructive-hover: 0 4px 16px rgba(239, 68, 68, 0.3);
 
     /* Tooltips */
     --tooltip-bg: rgba(255, 255, 255, 0.95);
-    --tooltip-border: rgba(255, 255, 255, 0.4);
-    --tooltip-text: var(--zinc-700);
+    --tooltip-border: var(--btn-outline-hover-bg);
+    --tooltip-text: var(--text-secondary);
     --tooltip-shadow: var(--shadow-md);
 
     /* Contextual effects */
-    --text-secondary-action: var(--zinc-700);
+    --text-secondary-action: var(--text-secondary);
     --text-info: oklch(0.50 0.18 255);
     --text-icon-ghost-hover: var(--zinc-900);
     --text-icon-danger-hover: oklch(0.45 0.16 18);
-    --bg-icon-ghost-hover: rgba(255, 255, 255, 0.10);
+    --bg-icon-ghost-hover: var(--white-glass-subtle);
     --bg-icon-danger-hover: oklch(0.58 0.16 18 / 0.10);
     --ring-focus-primary: oklch(0.62 0.15 145 / 0.50);
-    --value-drop-shadow: 0 0 8px rgba(16,185,129,0.08);
+    --value-drop-shadow: 0 0 8px rgba(16,185,129,0.10);
     --shadow-primary-active: 0 2px 8px rgba(16,185,129,0.1);
     --shadow-secondary-active: 0 2px 8px rgba(138,31,214,0.1);
     --history-marker-shadow: var(--shadow-sm);
 
     /* Brand glass icon buttons */
-    --bg-primary-icon: oklch(0.62 0.15 145 / 0.30);
-    --bg-primary-icon-hover: oklch(0.62 0.15 145 / 0.40);
+    --bg-primary-icon: var(--primary-glass-30);
+    --bg-primary-icon-hover: var(--primary-glass-40);
     --border-primary-icon: oklch(0.70 0.13 145 / 0.30);
     --border-t-primary-icon: oklch(0.78 0.10 145 / 0.50);
-    --border-l-primary-icon: oklch(0.78 0.10 145 / 0.50);
+    --border-l-primary-icon: var(--border-t-primary-icon);
     --border-primary-icon-hover: oklch(0.70 0.13 145 / 0.45);
-    --bg-secondary-icon: oklch(0.58 0.16 300 / 0.30);
-    --bg-secondary-icon-hover: oklch(0.58 0.16 300 / 0.40);
+    --bg-secondary-icon: var(--secondary-glass-30);
+    --bg-secondary-icon-hover: var(--secondary-glass-40);
     --border-secondary-icon: oklch(0.67 0.14 300 / 0.30);
     --border-t-secondary-icon: oklch(0.76 0.11 300 / 0.50);
-    --border-l-secondary-icon: oklch(0.76 0.11 300 / 0.50);
+    --border-l-secondary-icon: var(--border-t-secondary-icon);
     --border-secondary-icon-hover: oklch(0.67 0.14 300 / 0.45);
 
     /* Border Radiuses */
@@ -254,60 +265,64 @@
     --theme-text-body: var(--zinc-50);
     --theme-bg-app: transparent;
 
+    /* Dark mode shared primitives */
+    --secondary-glass-10: oklch(0.58 0.16 300 / 0.10);
+    --secondary-glass-20: oklch(0.58 0.16 300 / 0.20);
+    --shadow-dark-40: rgba(0, 0, 0, 0.40);
+    --white-glass-faint: rgba(255, 255, 255, 0.05);
+    --white-glass-soft: rgba(255, 255, 255, 0.15);
+    --white-glass-border: rgba(255, 255, 255, 0.18);
+
     /* Glass Cards */
     --card-bg: rgba(0, 0, 0, 0.35);
-    --card-border: oklch(0.62 0.15 145 / 0.2);
-    --card-border-t: rgba(255, 255, 255, 0.18);
-    --card-border-l: rgba(255, 255, 255, 0.18);
-    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
-    --card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 25px oklch(0.62 0.15 145 / 0.2);
+    --card-border: var(--primary-glass-20);
+    --card-border-t: var(--white-glass-border);
+    --card-border-l: var(--card-border-t);
+    --card-shadow: 0 8px 32px 0 var(--shadow-dark-40), inset 0 1px 0 0 var(--white-glass-subtle);
+    --card-hover-shadow: 0 12px 40px var(--shadow-dark-40), 0 0 25px var(--primary-glass-20);
     --card-hover-border: oklch(0.62 0.15 145 / 0.5);
-    --card-ring: rgba(255, 255, 255, 0.05);
+    --card-ring: var(--white-glass-faint);
 
     /* Modals */
     --modal-bg: rgba(9, 9, 11, 0.75);
-    --modal-border: oklch(0.62 0.15 145 / 0.2);
+    --modal-border: var(--primary-glass-20);
     --modal-border-t: rgba(255, 255, 255, 0.2);
-    --modal-border-l: rgba(255, 255, 255, 0.2);
-    --modal-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    --modal-border-l: var(--modal-border-t);
+    --modal-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 var(--white-glass-soft);
 
     /* Toast HUD */
     --hud-bg: rgba(0, 0, 0, 0.45);
-    --hud-border: oklch(0.62 0.15 145 / 0.2);
-    --hud-border-t: rgba(255, 255, 255, 0.18);
-    --hud-border-l: rgba(255, 255, 255, 0.18);
-    --hud-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --hud-border: var(--primary-glass-20);
+    --hud-border-t: var(--white-glass-border);
+    --hud-border-l: var(--hud-border-t);
+    --hud-shadow: 0 16px 48px var(--shadow-dark-40), inset 0 1px 0 var(--white-glass-subtle);
 
     /* Buttons */
-    --btn-outline-bg: rgba(255, 255, 255, 0.05);
-    --btn-outline-border: rgba(255, 255, 255, 0.05);
-    --btn-outline-border-t: rgba(255, 255, 255, 0.1);
-    --btn-outline-border-l: rgba(255, 255, 255, 0.1);
+    --btn-outline-bg: var(--white-glass-faint);
+    --btn-outline-border: var(--white-glass-faint);
+    --btn-outline-border-t: var(--white-glass-subtle);
+    --btn-outline-border-l: var(--btn-outline-border-t);
     --btn-outline-text: var(--zinc-400);
-    --btn-outline-hover-bg: rgba(255, 255, 255, 0.1);
-    --btn-outline-hover-border: rgba(255, 255, 255, 0.15);
+    --btn-outline-hover-bg: var(--white-glass-subtle);
+    --btn-outline-hover-border: var(--white-glass-soft);
     --btn-outline-hover-text: var(--zinc-200);
     --btn-outline-inset-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
 
-    --btn-danger-bg: rgba(239, 68, 68, 0.05);
-    --btn-danger-border: rgba(239, 68, 68, 0.2);
-    --btn-danger-border-t: rgba(255, 255, 255, 0.05);
-    --btn-danger-border-l: rgba(255, 255, 255, 0.05);
-    --btn-danger-text: var(--zinc-500);
+    --btn-danger-border-t: var(--white-glass-faint);
+    --btn-danger-border-l: var(--btn-danger-border-t);
     --btn-danger-hover-bg: rgba(239, 68, 68, 0.15);
-    --btn-danger-hover-border: rgba(239, 68, 68, 0.4);
     --btn-danger-hover-text: rgba(248, 113, 113, 1);
-    --btn-danger-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --btn-danger-inset-shadow: inset 0 1px 0 var(--white-glass-faint);
 
     /* Inputs */
     --input-bg: rgba(9, 9, 11, 0.5); /* bg-zinc-950/50 */
-    --input-border: rgba(255, 255, 255, 0.1); /* white/10 */
+    --input-border: var(--white-glass-subtle);
 
     /* Typography */
     --text-primary: var(--zinc-100);
     --text-secondary: var(--zinc-300);
     --label-text: oklch(0.60 0.007 145); /* zinc-450 */
-    --text-muted: oklch(0.60 0.007 145);  /* zinc-450 */
+    --text-muted: var(--label-text);
     --text-alt: var(--zinc-400);
 
     /* Brand text */
@@ -324,56 +339,56 @@
     /* Surface states */
     --bg-surface-elevated: var(--zinc-900);
     --bg-surface-muted: oklch(0.08 0.002 145 / 0.30);
-    --bg-surface-hover: var(--zinc-900);
+    --bg-surface-hover: var(--bg-surface-elevated);
     --bg-badge: var(--zinc-800);
     --bg-disabled: var(--zinc-950);
     --text-disabled: var(--zinc-600);
 
     /* Brand subtle backgrounds */
-    --bg-ambient-primary: oklch(0.62 0.15 145 / 0.12);
-    --bg-ambient-secondary: oklch(0.58 0.16 300 / 0.10);
-    --bg-primary-soft: oklch(0.62 0.15 145 / 0.10);
-    --bg-primary-soft-hover: oklch(0.62 0.15 145 / 0.20);
-    --bg-primary-badge: oklch(0.62 0.15 145 / 0.20);
-    --bg-secondary-soft: oklch(0.58 0.16 300 / 0.10);
-    --bg-secondary-soft-hover: oklch(0.58 0.16 300 / 0.20);
+    --bg-ambient-primary: var(--primary-glass-10);
+    --bg-ambient-secondary: var(--secondary-glass-10);
+    --bg-primary-soft: var(--primary-glass-10);
+    --bg-primary-soft-hover: var(--primary-glass-20);
+    --bg-primary-badge: var(--primary-glass-20);
+    --bg-secondary-soft: var(--secondary-glass-10);
+    --bg-secondary-soft-hover: var(--secondary-glass-20);
     --bg-secondary-action-hover: oklch(0.16 0.04 300 / 0.15);
     --bg-row-hover: oklch(0.13 0.004 145 / 0.10);
     --bg-menu-divider: oklch(0.21 0.005 145 / 0.80);
     --bg-danger-hover: oklch(0.15 0.04 18 / 0.20);
-    --bg-subtle-hover: rgba(255, 255, 255, 0.05);
+    --bg-subtle-hover: var(--white-glass-faint);
     --bg-add-increment: oklch(0.18 0.04 145 / 0.10);
     --bg-history-marker: var(--zinc-950);
-    --bg-plus-glass: rgba(0, 0, 0, 0.35);
+    --bg-plus-glass: var(--card-bg);
 
     /* Subtle borders */
     --border-default: var(--zinc-800);
-    --border-muted: rgba(255, 255, 255, 0.05);
-    --border-primary-badge: oklch(0.62 0.15 145 / 0.30);
-    --border-control-selected: oklch(0.62 0.15 145 / 0.30);
-    --border-tab-shell: oklch(0.62 0.15 145 / 0.10);
-    --border-tab-selected: oklch(0.62 0.15 145 / 0.25);
-    --border-skeleton: oklch(0.17 0.004 145);
-    --border-option-hover: rgba(255, 255, 255, 0.10);
-    --border-add-increment: oklch(0.62 0.15 145 / 0.20);
-    --border-add-increment-hover: oklch(0.62 0.15 145 / 0.40);
-    --border-secondary-action-hover: oklch(0.58 0.16 300 / 0.40);
+    --border-muted: var(--white-glass-faint);
+    --border-primary-badge: var(--primary-glass-30);
+    --border-control-selected: var(--primary-glass-30);
+    --border-tab-shell: var(--primary-glass-10);
+    --border-tab-selected: var(--primary-glass-25);
+    --border-skeleton: var(--divide-default);
+    --border-option-hover: var(--white-glass-subtle);
+    --border-add-increment: var(--primary-glass-20);
+    --border-add-increment-hover: var(--primary-glass-40);
+    --border-secondary-action-hover: var(--secondary-glass-40);
     --border-history-marker: var(--zinc-900);
     --border-menu-divider: oklch(0.21 0.005 145 / 0.60);
     --border-primary-subtle: oklch(0.27 0.07 145 / 0.30);
     --border-t-primary-subtle: oklch(0.70 0.13 145 / 0.25);
-    --border-l-primary-subtle: oklch(0.70 0.13 145 / 0.25);
+    --border-l-primary-subtle: var(--border-t-primary-subtle);
     --border-secondary-subtle: oklch(0.25 0.07 300 / 0.30);
     --border-t-secondary-subtle: oklch(0.67 0.14 300 / 0.25);
-    --border-l-secondary-subtle: oklch(0.67 0.14 300 / 0.25);
+    --border-l-secondary-subtle: var(--border-t-secondary-subtle);
 
     /* Dividers */
     --divide-default: oklch(0.19 0.004 145); /* zinc-850 */
 
     /* Brand active/preset states */
-    --bg-primary-active: oklch(0.62 0.15 145 / 0.20);
+    --bg-primary-active: var(--primary-glass-20);
     --border-primary-active: var(--primary-500);
-    --bg-secondary-active: oklch(0.58 0.16 300 / 0.20);
+    --bg-secondary-active: var(--secondary-glass-20);
     --border-secondary-active: var(--secondary-500);
 
     /* Brand hover border states */
@@ -381,15 +396,14 @@
     --border-secondary-hover: oklch(0.41 0.13 300 / 0.50);
 
     /* Glass specular highlight */
-    --glass-specular: rgba(255, 255, 255, 0.12);
-    --glass-card-hover-specular: rgba(255, 255, 255, 0.20);
-    --glass-shimmer: rgba(255, 255, 255, 0.12);
+    --glass-specular: var(--white-glass-subtle);
+    --glass-card-hover-specular: var(--modal-border-t);
+    --glass-shimmer: var(--glass-specular);
 
     /* Cancel buttons (neutral glass) */
-    --btn-cancel-bg: transparent;
-    --btn-cancel-border: rgba(255, 255, 255, 0.1);
+    --btn-cancel-border: var(--white-glass-subtle);
     --btn-cancel-text: var(--zinc-300);
-    --btn-cancel-hover-bg: rgba(255, 255, 255, 0.05);
+    --btn-cancel-hover-bg: var(--white-glass-faint);
 
     /* Destructive confirm button shadow */
     --shadow-destructive: 0 0 15px rgba(239, 68, 68, 0.3);
@@ -397,7 +411,7 @@
 
     /* Tooltips */
     --tooltip-bg: rgba(9, 9, 11, 0.8);
-    --tooltip-border: oklch(0.62 0.15 145 / 0.2);
+    --tooltip-border: var(--primary-glass-20);
     --tooltip-text: var(--zinc-200);
     --tooltip-shadow: var(--shadow-primary-glow);
 
@@ -406,26 +420,26 @@
     --text-info: oklch(0.72 0.14 255);
     --text-icon-ghost-hover: var(--zinc-200);
     --text-icon-danger-hover: var(--red-400);
-    --bg-icon-ghost-hover: rgba(255, 255, 255, 0.05);
+    --bg-icon-ghost-hover: var(--white-glass-faint);
     --bg-icon-danger-hover: oklch(0.58 0.16 18 / 0.15);
-    --ring-focus-primary: oklch(0.62 0.15 145 / 0.30);
+    --ring-focus-primary: var(--primary-glass-30);
     --value-drop-shadow: 0 0 15px rgba(16,185,129,0.2);
     --shadow-primary-active: var(--shadow-primary-glow);
     --shadow-secondary-active: var(--shadow-secondary-glow);
     --history-marker-shadow: var(--shadow-md);
 
     /* Brand glass icon buttons */
-    --bg-primary-icon: oklch(0.62 0.15 145 / 0.20);
-    --bg-primary-icon-hover: oklch(0.62 0.15 145 / 0.30);
-    --border-primary-icon: oklch(0.62 0.15 145 / 0.20);
+    --bg-primary-icon: var(--primary-glass-20);
+    --bg-primary-icon-hover: var(--primary-glass-30);
+    --border-primary-icon: var(--primary-glass-20);
     --border-t-primary-icon: oklch(0.70 0.13 145 / 0.30);
-    --border-l-primary-icon: oklch(0.70 0.13 145 / 0.30);
+    --border-l-primary-icon: var(--border-t-primary-icon);
     --border-primary-icon-hover: oklch(0.62 0.15 145 / 0.35);
-    --bg-secondary-icon: oklch(0.58 0.16 300 / 0.20);
-    --bg-secondary-icon-hover: oklch(0.58 0.16 300 / 0.30);
-    --border-secondary-icon: oklch(0.58 0.16 300 / 0.20);
+    --bg-secondary-icon: var(--secondary-glass-20);
+    --bg-secondary-icon-hover: var(--secondary-glass-30);
+    --border-secondary-icon: var(--secondary-glass-20);
     --border-t-secondary-icon: oklch(0.67 0.14 300 / 0.30);
-    --border-l-secondary-icon: oklch(0.67 0.14 300 / 0.30);
+    --border-l-secondary-icon: var(--border-t-secondary-icon);
     --border-secondary-icon-hover: oklch(0.58 0.16 300 / 0.35);
 }
 

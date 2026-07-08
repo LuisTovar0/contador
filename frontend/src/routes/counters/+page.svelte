@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import { i18n, t, STORAGE_KEYS } from '$lib';
   import CounterCard from '$lib/components/counter/CounterCard.svelte';
   import CounterRow from '$lib/components/counter/CounterRow.svelte';
@@ -201,7 +202,7 @@
         {:else}
             <!-- Counter Grid or List Switch -->
             {#if viewMode === 'list'}
-                <div class="glass-surface border border-card-border border-t-card-border-t border-l-card-border-l rounded-2xl shadow-card overflow-visible flex flex-col relative ring-1 ring-card-ring">
+                <div transition:fade|local={{ duration: 120 }} class="glass-surface border border-card-border border-t-card-border-t border-l-card-border-l rounded-2xl shadow-card overflow-visible flex flex-col relative ring-1 ring-card-ring">
                     <!-- Specular reflection glass highlight -->
                     <div class="absolute inset-0 rounded-2xl bg-linear-to-br from-glass-specular via-transparent to-transparent pointer-events-none"></div>
                     <!-- List Header (Desktop-only header row) -->
@@ -220,7 +221,7 @@
                 </div>
             {:else}
                 <!-- Responsive Grid counters list -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div transition:fade|local={{ duration: 120 }} class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {#each displayedCounters as counter (counter.id)}
                         <CounterCard {counter} />
                     {/each}
@@ -230,8 +231,17 @@
     </div>
 </div>
 
+<footer class="mt-auto pt-8 pb-4 text-center text-[10px] text-muted relative z-10 w-full">
+    <a href="https://luistovar.dev" target="_blank" rel="noopener noreferrer"
+       class="underline underline-offset-2">Luís Tovar</a>
+    ·
+    <a href="https://github.com/LuisTovar0/contador" target="_blank" rel="noopener noreferrer"
+       class="text-primary-500 hover:text-primary-brand underline underline-offset-2 transition-colors">Source
+        code</a>
+</footer>
+
 <!-- Floating action button to Add Counter -->
-<div class="fixed bottom-6 right-6 z-20" style="bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));">
+<div class="fixed right-6 z-20" style="bottom: calc(var(--spacing) * 6 + env(safe-area-inset-bottom, 0px));">
     <IconButton
             onclick={openCreateModal}
             variant="primary"

@@ -84,13 +84,13 @@
 
 <Modal {show} {onclose}>
     <!-- Header -->
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4 shrink-0">
+    <div class="flex items-center justify-between border-b border-modal-border pb-4 mb-4 shrink-0">
         <div>
-            <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                <Clock size={18} class="text-primary-600 dark:text-primary-400" />
+            <h2 class="text-lg font-bold text-primary flex items-center gap-2">
+                <Clock size={18} class="text-primary-brand" />
                 <span>{counterId ? t('history.titleCounter', { name: counterName() }) : t('history.title')}</span>
             </h2>
-            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            <p class="text-xs text-muted mt-0.5">
                 {counterId ? t('history.subtitleCounter') : t('history.subtitle')}
             </p>
         </div>
@@ -105,16 +105,16 @@
     </div>
 
     <!-- Search -->
-    <div class="pb-4 border-b border-zinc-200 dark:border-white/5 shrink-0">
+    <div class="pb-4 border-b border-muted shrink-0">
         <div class="relative">
-			<span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500">
+			<span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">
 				<Search size={16} />
 			</span>
             <input
                     type="text"
                     bind:value={searchQuery}
                     placeholder={counterId ? t('history.searchPlaceholderCounter') : t('history.searchPlaceholder')}
-                    class="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/10 rounded-xl pl-9 pr-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
+                    class="w-full glass-surface border border-input-border rounded-xl pl-9 pr-3 py-2 text-primary placeholder:text-placeholder focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 text-base md:text-sm"
             />
         </div>
     </div>
@@ -122,29 +122,29 @@
     <!-- History Items -->
     <div class="flex-1 overflow-y-auto pt-4 space-y-4 pr-1">
         {#if visibleHistory().length === 0}
-            <div class="flex flex-col items-center justify-center h-48 text-center text-zinc-500 dark:text-zinc-500">
-                <Calendar size={32} class="text-zinc-300 dark:text-zinc-600 mb-2" />
+            <div class="flex flex-col items-center justify-center h-48 text-center text-muted">
+                <Calendar size={32} class="text-muted mb-2" />
                 <p class="text-sm">{t('history.noHistory')}</p>
                 {#if searchQuery}
-                    <p class="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{t('history.clearSearch')}</p>
+                    <p class="text-xs text-muted mt-1">{t('history.clearSearch')}</p>
                 {/if}
             </div>
         {:else}
-            <div class="relative border-l border-zinc-200 dark:border-white/5 pl-4 ml-2.5 space-y-5">
+            <div class="relative border-l border-muted pl-4 ml-2.5 space-y-5">
                 {#each visibleHistory() as entry (entry.id)}
                     <div class="relative">
                         <!-- Icon marker -->
-                        <div class="absolute -left-[27px] top-0.5 flex items-center justify-center w-5 h-5 rounded-full border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950 text-xs shadow-sm dark:shadow-md">
+                        <div class="absolute -left-[27px] top-0.5 flex items-center justify-center w-5 h-5 rounded-full border border-history-marker bg-history-marker text-xs shadow-history-marker">
                             {#if entry.type === 'create'}
-                                <PlusCircle size={12} class="text-primary-600 dark:text-primary-400" />
+                                <PlusCircle size={12} class="text-primary-brand" />
                             {:else if entry.type === 'increment'}
-                                <ArrowUpRight size={12} class="text-primary-600 dark:text-primary-400" />
+                                <ArrowUpRight size={12} class="text-primary-brand" />
                             {:else if entry.type === 'decrement'}
-                                <ArrowDownRight size={12} class="text-secondary-600 dark:text-secondary-400" />
+                                <ArrowDownRight size={12} class="text-secondary-brand" />
                             {:else if entry.type === 'set'}
-                                <Edit3 size={11} class="text-blue-600 dark:text-blue-400" />
+                                <Edit3 size={11} class="text-info" />
                             {:else if entry.type === 'delete'}
-                                <Trash2 size={11} class="text-zinc-500 dark:text-zinc-400" />
+                                <Trash2 size={11} class="text-muted" />
                             {/if}
                         </div>
 
@@ -153,32 +153,32 @@
                             <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-2">
                                     {#if !counterId}
-                                        <span class="font-semibold text-xs text-zinc-800 dark:text-zinc-200">
+                                        <span class="font-semibold text-xs text-secondary">
                                             {entry.counterName}
                                         </span>
                                     {/if}
                                     {#if entry.method}
-                                        <span class="text-[9px] bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/20 dark:border-primary-500/30 text-primary-700 dark:text-primary-400 font-semibold px-1.5 py-0.5 rounded-full select-none">
+                                        <span class="text-[9px] bg-primary-badge border border-primary-badge text-primary-brand-subtle font-semibold px-1.5 py-0.5 rounded-full select-none">
                                             {translatedMethod(entry.method)}
                                         </span>
                                     {/if}
                                 </div>
-                                <span class="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono flex items-center gap-1">
+                                <span class="text-[10px] text-muted font-mono flex items-center gap-1">
 									<span>{formatDate(entry.timestamp)}</span>
 									<span>•</span>
 									<span>{formatTime(entry.timestamp)}</span>
 								</span>
                             </div>
-                            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-normal">
+                            <p class="text-xs text-alt leading-normal">
                                 {entry.description}
                             </p>
                             {#if entry.prevValue !== null && entry.type !== 'delete'}
-                                <div class="flex items-center gap-1.5 text-[10px] font-mono text-zinc-500 dark:text-zinc-500">
+                                <div class="flex items-center gap-1.5 text-[10px] font-mono text-muted">
                                     <span>{entry.prevValue}</span>
                                     <span>→</span>
-                                    <span class="text-zinc-800 dark:text-zinc-300 font-bold">{entry.newValue}</span>
+                                    <span class="text-secondary font-bold">{entry.newValue}</span>
                                     {#if entry.delta !== null}
-                                        <span class={entry.delta > 0 ? 'text-primary-600 dark:text-primary-400 font-semibold' : 'text-secondary-600 dark:text-secondary-400 font-semibold'}>
+                                        <span class={entry.delta > 0 ? 'text-primary-brand font-semibold' : 'text-secondary-brand font-semibold'}>
 											({entry.delta > 0 ? '+' : ''}{entry.delta})
 										</span>
                                     {/if}
@@ -195,7 +195,7 @@
                     <button
                             type="button"
                             onclick={loadMore}
-                            class="px-5 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl font-bold transition-all text-xs cursor-pointer active:scale-[0.98] shadow-sm"
+                            class="px-5 py-2 border border-modal-border hover:bg-subtle-hover text-primary-brand hover:text-primary-brand-active rounded-xl font-bold transition-all text-xs cursor-pointer active:scale-[0.98] shadow-sm"
                     >
                         {t('history.loadMore')}
                     </button>

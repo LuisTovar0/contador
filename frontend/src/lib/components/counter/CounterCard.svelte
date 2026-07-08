@@ -9,7 +9,7 @@
   import SetExactValueModal from '$lib/components/modals/SetExactValueModal.svelte';
   import CustomAdjustModal from '$lib/components/modals/CustomAdjustModal.svelte';
   import DeleteConfirmModal from '$lib/components/modals/DeleteConfirmModal.svelte';
-  import SettingsModal from '$lib/components/modals/SettingsModal.svelte';
+  import CreateCounterModal from '$lib/components/modals/CreateCounterModal.svelte';
 
   interface Props {
     counter: Counter;
@@ -50,7 +50,7 @@
   }
 
   function openSettings() {
-    dialog.open(SettingsModal, { counter });
+    dialog.open(CreateCounterModal, { counter });
   }
 
   function openDeleteConfirm() {
@@ -74,17 +74,17 @@
 </script>
 
 <div
-        class="group relative overflow-hidden rounded-2xl border border-zinc-200/55 dark:border-primary-500/20 border-t-white/80 border-l-white/80 dark:border-t-white/18 dark:border-l-white/18 bg-white/25 dark:bg-black/35 backdrop-blur-xl p-5 shadow-[0_8px_32px_0_rgba(9,9,11,0.06),_inset_0_1px_0_0_rgba(255,255,255,0.6)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.37),_inset_0_1px_0_0_rgba(255,255,255,0.12)] hover:shadow-lg hover:-translate-y-1 hover:scale-[1.015] hover:border-primary-300/80 dark:hover:border-primary-500/50 hover:shadow-primary-glow dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_0_25px_rgba(16,185,129,0.2),_inset_0_1px_0_0_rgba(255,255,255,0.15)] transition-all duration-500 flex flex-col gap-4 ring-1 ring-black/5 dark:ring-white/5"
+        class="group relative overflow-hidden rounded-2xl border border-card-border border-t-card-border-t border-l-card-border-l glass-surface p-5 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:scale-[1.015] hover:border-card-hover-border transition-all duration-500 flex flex-col gap-4 ring-1 ring-card-ring"
 >
     <!-- Specular reflection glass highlight -->
-    <div class="absolute inset-0 bg-gradient-to-br from-white/35 dark:from-white/12 via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-white/55 dark:group-hover:from-white/20 group-hover:translate-x-1.5 group-hover:translate-y-1.5 transition-all duration-500 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-glass-specular via-transparent to-transparent opacity-80 group-hover:opacity-100 group-hover:from-glass-card-hover-specular group-hover:translate-x-1.5 group-hover:translate-y-1.5 transition-all duration-500 pointer-events-none"></div>
 
     <!-- Shimmer reflection sweep -->
-    <div class="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/30 dark:via-white/12 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></div>
+    <div class="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-glass-shimmer to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></div>
     <!-- Header -->
     <div class="flex items-start justify-between">
         <div class="min-w-0 flex-1 pr-2">
-            <h3 class="font-bold text-base text-zinc-900 dark:text-zinc-100 truncate">
+            <h3 class="font-bold text-base text-primary truncate">
                 {counter.name}
             </h3>
         </div>
@@ -134,8 +134,8 @@
     <!-- Value display -->
     <div class="flex flex-col items-center justify-center py-3 select-none">
         <div
-                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-100 tabular-nums transition-all duration-100 drop-shadow-[0_0_8px_rgba(16,185,129,0.08)] dark:drop-shadow-[0_0_15px_rgba(16,185,129,0.2)]
-			{valPopAnimation ? 'scale-105 text-primary-600 dark:text-primary-400' : 'scale-100'}"
+                class="flex justify-center gap-3 text-5xl font-mono font-bold tracking-tight text-primary tabular-nums transition-all duration-100 drop-shadow-[var(--value-drop-shadow)]
+			{valPopAnimation ? 'scale-105 text-primary-brand' : 'scale-100'}"
         >
             <span>{formatVal(counter.value)}</span>
             <span class="w-min">{counter.unit}</span>
@@ -150,8 +150,8 @@
                 <!-- Decrement -->
                 <button
                         onclick={() => handleQuickIncrement(-Math.abs(inc))}
-                        class="relative overflow-hidden py-2 px-3 border border-secondary-200/50 dark:border-secondary-900/30 border-t-secondary-100/50 dark:border-t-secondary-400/25 border-l-secondary-100/50 dark:border-l-secondary-400/25 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] cursor-pointer
-					bg-secondary-500/5 dark:bg-secondary-500/10 text-secondary-700 dark:text-secondary-400 hover:bg-secondary-500/15 dark:hover:bg-secondary-500/20 hover:border-secondary-300 dark:hover:border-secondary-700/50 hover:shadow-secondary-glow"
+                        class="relative overflow-hidden py-2 px-3 border border-secondary-subtle border-t-secondary-subtle border-l-secondary-subtle rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),var(--btn-outline-inset-shadow)] cursor-pointer
+					bg-secondary-soft text-secondary-brand hover:bg-secondary-soft-hover hover:border-secondary-hover hover:shadow-secondary-glow"
                 >
                     <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
                     <span class="relative z-10">-{Math.abs(inc)}</span>
@@ -159,8 +159,8 @@
                 <!-- Increment -->
                 <button
                         onclick={() => handleQuickIncrement(Math.abs(inc))}
-                        class="relative overflow-hidden py-2 px-3 border border-primary-200/50 dark:border-primary-900/30 border-t-primary-100/50 dark:border-t-primary-400/25 border-l-primary-100/50 dark:border-l-primary-400/25 rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] cursor-pointer
-					bg-primary-500/5 dark:bg-primary-500/10 text-primary-700 dark:text-primary-400 hover:bg-primary-500/15 dark:hover:bg-primary-500/20 hover:border-primary-300 dark:hover:border-primary-700/50 hover:shadow-primary-glow"
+                        class="relative overflow-hidden py-2 px-3 border border-primary-subtle border-t-primary-subtle border-l-primary-subtle rounded-xl font-semibold transition-all text-xs flex items-center justify-center gap-1 active:translate-y-px active:shadow-none shadow-[0_2px_4px_rgba(0,0,0,0.02),var(--btn-outline-inset-shadow)] cursor-pointer
+					bg-primary-soft text-primary-brand-subtle hover:bg-primary-soft-hover hover:border-primary-hover hover:shadow-primary-glow"
                 >
                     <span class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></span>
                     <span class="relative z-10">+{Math.abs(inc)}</span>
@@ -170,7 +170,7 @@
             <!-- Custom adjustments button -->
             <button
                     onclick={openCustomAdjust}
-                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
+                    class="w-full py-1.5 border border-default hover:bg-surface-hover text-alt hover:text-primary rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
                 <span>{t('counters.customAdjust')}</span>
             </button>
@@ -178,7 +178,7 @@
             <!-- Set value -->
             <button
                     onclick={openSetExactValue}
-                    class="w-full py-1.5 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
+                    class="w-full py-1.5 border border-default hover:bg-surface-hover text-alt hover:text-primary rounded-xl font-medium transition-all text-xs flex items-center justify-center gap-1.5 active:translate-y-px cursor-pointer"
             >
                 <span>{t('counters.setValue')}</span>
             </button>
@@ -186,16 +186,16 @@
     </div>
 
     <!-- Card History Button -->
-    <div class="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/60 pt-2.5 mt-1">
+    <div class="flex items-center justify-between border-t border-menu-divider pt-2.5 mt-1">
         <button
                 onclick={openHistory}
-                class="text-[10px] font-semibold text-zinc-500 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors flex items-center gap-1 cursor-pointer"
+                class="text-[10px] font-semibold text-muted hover:text-secondary transition-colors flex items-center gap-1 cursor-pointer"
         >
             <Clock size={10} />
             <span>{t('counters.viewActivityLog')}</span>
         </button>
         {#if localHistory().length > 0}
-			<span class="text-[8px] font-mono text-zinc-400 dark:text-zinc-500">
+			<span class="text-[8px] font-mono text-muted">
 				{t('counters.last')} {formatTime(localHistory()[0].timestamp)}
 			</span>
         {/if}

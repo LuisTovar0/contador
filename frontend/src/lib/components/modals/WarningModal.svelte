@@ -22,15 +22,15 @@
     icon: Icon,
     confirmText = t('modals.save'),
     cancelText = t('modals.cancel'),
-    confirmClass = 'bg-red-600 hover:bg-red-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-[0_4px_12px_rgba(239,68,68,0.2)] dark:shadow-[0_0_15px_rgba(239,68,68,0.3)] active:translate-y-[0.5px]',
+    confirmClass = 'px-5 py-2.5 bg-red-600 hover:bg-red-500 text-zinc-100 rounded-xl font-bold transition-all text-xs cursor-pointer shadow-destructive hover:shadow-destructive-hover active:translate-y-[0.5px]',
     onclose,
     children
   }: Props = $props();
 </script>
 
 <Modal {show} onclose={() => onclose(false)}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold flex items-center gap-2 text-red-600 dark:text-red-400">
+    <div class="flex items-center justify-between border-b border-modal-border pb-4 mb-4">
+        <h2 class="text-lg font-bold flex items-center gap-2 text-error">
             {#if Icon}
                 <Icon size={18} class="shrink-0" />
             {/if}
@@ -50,11 +50,11 @@
         {@render children?.()}
     </div>
 
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
+    <div class="border-t border-modal-border pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
         <button
                 type="button"
                 onclick={() => onclose(false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
+                class="px-4 py-2 border border-btn-cancel-border hover:bg-btn-cancel-hover-bg text-btn-cancel-text rounded-xl font-semibold transition-all active:scale-[0.98] text-xs cursor-pointer"
         >
             {cancelText}
         </button>

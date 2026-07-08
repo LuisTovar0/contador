@@ -5,7 +5,7 @@
   import DialogHost from '$lib/components/modals/DialogHost.svelte';
   import SplashScreen from '$lib/components/ui/SplashScreen.svelte';
   import { authStore } from '$lib/store.svelte';
-  import { t } from '$lib';
+  import { t, TIMING } from '$lib';
 
 
   let { children } = $props();
@@ -38,7 +38,7 @@
     } else {
       if (shouldShowSplash) {
         const elapsed = Date.now() - splashShowStartedAt;
-        const remaining = 3000 - elapsed;
+        const remaining = TIMING.SPLASH_DURATION_MS - elapsed;
         if (remaining > 0) {
           const timer = setTimeout(() => {
             if (!targetShowSplash) {
@@ -76,10 +76,10 @@
 {#if shouldShowSplash}
     <SplashScreen message={currentMessage} />
 {:else}
-<main class="min-h-screen grid-bg bg-zinc-50/20 dark:bg-transparent text-zinc-900 dark:text-zinc-100 flex flex-col items-center p-4 md:p-8 overflow-x-hidden relative font-sans transition-colors duration-300">
+<main class="min-h-screen min-h-dvh grid-bg bg-bg-app text-primary flex flex-col items-center p-4 md:p-8 overflow-x-hidden relative font-sans transition-colors duration-300">
     <!-- Ambient glowing backgrounds for Cyberpunk aesthetic -->
-    <div class="fixed top-[5%] left-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-primary-500/22 dark:bg-primary-500/12 rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-1"></div>
-    <div class="fixed bottom-[5%] right-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-secondary-500/18 dark:bg-secondary-500/10 rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-2"></div>
+    <div class="fixed top-[5%] left-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-ambient-primary rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-1"></div>
+    <div class="fixed bottom-[5%] right-[5%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-ambient-secondary rounded-full blur-[130px] pointer-events-none -z-10 animate-blob-2"></div>
 
     {@render children()}
 </main>

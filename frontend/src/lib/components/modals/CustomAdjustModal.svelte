@@ -43,22 +43,22 @@
 </script>
 
 <Modal {show} {onclose}>
-    <div class="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4 mb-4">
-        <h2 class="text-lg font-bold text-primary-600 dark:text-primary-400 flex items-center gap-2">
+    <div class="flex items-center justify-between border-b border-modal-border pb-4 mb-4">
+        <h2 class="text-lg font-bold text-primary-brand flex items-center gap-2">
             <PenLine size={18} />
             <span>{t('custom.title')}</span>
         </h2>
         <button
                 onclick={() => onclose(false)}
-                class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 cursor-pointer"
+                class="text-muted hover:text-secondary transition-colors p-1 rounded-lg hover:bg-subtle-hover cursor-pointer"
         >
             <X size={18} />
         </button>
     </div>
 
     <div class="flex-1 overflow-y-auto space-y-4 pr-1 pb-2">
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-normal">
-            {@html t('custom.body', { name: `<strong class="text-zinc-800 dark:text-zinc-300">"${counter.name}"</strong>` })}
+        <p class="text-xs text-muted leading-normal">
+            {@html t('custom.body', { name: `<strong class="text-secondary">"${counter.name}"</strong>` })}
         </p>
 
         <!-- Direction selection -->
@@ -68,8 +68,8 @@
                     onclick={() => (isCustomPositive = true)}
                     class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
 				{isCustomPositive
-					? 'bg-primary-50 dark:bg-primary-500/20 border-primary-300 dark:border-primary-500 text-primary-700 dark:text-primary-300 shadow-[0_2px_8px_rgba(16,185,129,0.1)] dark:shadow-primary-glow'
-					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
+					? 'bg-primary-active border-primary-active text-primary-brand-active shadow-primary-active'
+					: 'bg-surface-muted border-muted text-muted hover:border-option-hover'}"
             >
                 <Plus size={14} />
                 <span>{t('custom.increment')}</span>
@@ -79,8 +79,8 @@
                     onclick={() => (isCustomPositive = false)}
                     class="py-2.5 border rounded-xl font-bold transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer
 				{!isCustomPositive
-					? 'bg-secondary-50 dark:bg-secondary-500/20 border-secondary-300 dark:border-secondary-500 text-secondary-700 dark:text-secondary-300 shadow-[0_2px_8px_rgba(124,58,237,0.1)] dark:shadow-secondary-glow'
-					: 'bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'}"
+					? 'bg-secondary-active border-secondary-active text-secondary-brand-active shadow-secondary-active'
+					: 'bg-surface-muted border-muted text-muted hover:border-option-hover'}"
             >
                 <Minus size={14} />
                 <span>{t('custom.decrement')}</span>
@@ -89,7 +89,7 @@
 
         <div>
             <label for="customAmount-{counter.id}"
-                   class="block text-xs font-semibold text-zinc-555 dark:text-zinc-400 uppercase tracking-wider mb-1.5"
+                   class="block text-xs font-semibold text-text-alt uppercase tracking-wider mb-1.5"
             >{t('custom.amountLabel', { unit: counter.unit || 'no unit' })}</label
             >
             <input
@@ -98,16 +98,16 @@
                     min="0"
                     step={counter.decimals === 0 ? '1' : (1 / Math.pow(10, counter.decimals)).toString()}
                     bind:value={customAdjustInput}
-                    class="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-white/10 rounded-xl px-3 py-2 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 font-mono text-base"
+                    class="w-full glass-surface border border-input-border rounded-xl px-3 py-2 text-primary placeholder:text-placeholder focus:outline-none focus:border-primary-500 transition-colors focus:ring-1 focus:ring-primary-500/40 font-mono text-base"
             />
         </div>
     </div>
 
-    <div class="border-t border-zinc-200 dark:border-white/10 pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
+    <div class="border-t border-modal-border pt-4 mt-6 flex items-center justify-end gap-3 shrink-0">
         <button
                 type="button"
                 onclick={() => onclose(false)}
-                class="px-4 py-2 border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-600 dark:text-zinc-300 rounded-xl font-semibold transition-all text-xs cursor-pointer"
+                class="px-4 py-2 border border-btn-cancel-border hover:bg-btn-cancel-hover-bg text-btn-cancel-text rounded-xl font-semibold transition-all text-xs cursor-pointer"
         >
             {t('modals.cancel')}
         </button>

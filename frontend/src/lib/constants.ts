@@ -19,7 +19,6 @@ export const APP_LIMITS = {
 
 export const TIMING = {
   VALUE_POP_ANIMATION_MS: 180,
-  UNDO_TOAST_DURATION_MS: 5000,
   SPLASH_DURATION_MS: 3000,
 } as const;
 

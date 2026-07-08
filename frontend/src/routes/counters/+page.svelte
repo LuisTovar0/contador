@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { i18n, t, STORAGE_KEYS, TIMING } from '$lib';
+  import { i18n, t, STORAGE_KEYS } from '$lib';
   import CounterCard from '$lib/components/counter/CounterCard.svelte';
   import CounterRow from '$lib/components/counter/CounterRow.svelte';
   import CreateCounterModal from '$lib/components/modals/CreateCounterModal.svelte';
@@ -11,7 +11,7 @@
   import { isFirebaseConfigured } from '$lib/firebase';
   import { authStore, counterStore, themeStore } from '$lib/store.svelte';
   import {
-    CheckCircle2, History, LayoutGrid, List, LogOut, Moon, PersonStandingIcon, Plus, RotateCcw, Search, Sun, User,
+    History, LayoutGrid, List, LogOut, Moon, PersonStandingIcon, Plus, Search, Sun, User,
   } from 'lucide-svelte';
 
   // Search state
@@ -42,35 +42,6 @@
 
     return list;
   });
-
-  // Inline toast logic for undo
-  let lastActionToast = $derived.by(() => {
-    const logs = counterStore.history;
-    if (logs.length === 0) return null;
-    const lastLog = logs[0];
-    if (lastLog.type === 'create' || lastLog.type === 'delete') return null;
-    return lastLog;
-  });
-
-  let showToast = $state(false);
-  let toastTimeout: ReturnType<typeof setTimeout>;
-
-  // Show toast whenever last action changes
-  $effect(() => {
-    const action = lastActionToast;
-    if (action && !action.description.startsWith('Undo') && !action.description.startsWith('Redo')) {
-      showToast = true;
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        showToast = false;
-      }, TIMING.UNDO_TOAST_DURATION_MS);
-    }
-  });
-
-  function handleUndo() {
-    counterStore.undo();
-    showToast = false;
-  }
 
   async function handleLogout() {
     if (authStore.user?.isAnonymous) {
@@ -272,23 +243,3 @@
         <Plus size={24} />
     </IconButton>
 </div>
-
-<!-- BOTTOM TOAST NOTIFICATION (Undo HUD) -->
-{#if showToast && lastActionToast}
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-[calc(100%-2.5rem)] max-w-sm px-4 py-3 bg-hud-bg border border-hud-border border-t-hud-border-t border-l-hud-border-l rounded-xl shadow-hud backdrop-blur-xl flex items-center justify-between gap-3 text-xs leading-normal ring-1 ring-card-ring overflow-hidden" style="bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));">
-        <!-- Specular reflection glass highlight -->
-        <div class="absolute inset-0 bg-linear-to-br from-glass-specular via-transparent to-transparent pointer-events-none"></div>
-        <div class="flex items-center gap-2 text-secondary min-w-0">
-            <CheckCircle2 size={16} class="text-primary-500 shrink-0" />
-            <p class="truncate font-medium">{lastActionToast?.description}</p>
-        </div>
-        <button
-                onclick={handleUndo}
-                class="text-primary-brand hover:underline font-bold flex items-center gap-1 cursor-pointer shrink-0 uppercase tracking-wider text-[10px]"
-        >
-            <RotateCcw size={10} />
-            <span>{t('counters.undo')}</span>
-        </button>
-    </div>
-{/if}
-

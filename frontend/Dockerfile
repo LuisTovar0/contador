@@ -2,11 +2,11 @@
 FROM node:22-slim AS builder
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
+# Enable the package manager used by local development
+RUN corepack enable && corepack prepare pnpm@10.12.4 --activate
 
 # Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
